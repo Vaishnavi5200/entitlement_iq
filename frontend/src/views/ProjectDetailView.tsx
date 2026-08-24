@@ -25,21 +25,33 @@ import {
   FileClock,
   Send,
   XCircle,
-  Edit3
+  Edit3,
+  Bot,
+  Layers,
+  Sparkles,
+  Info,
+  DollarSign,
+  UserCheck,
+  Calculator
 } from 'lucide-react';
 import { api, Entitlement, Project, Contract, WeatherObservation, ClaimNotice } from '../api/client';
 import { RiskBadge, StatusBadge } from '../components/ui/Badges';
+import { MultiAgentVisualizer } from '../components/ui/MultiAgentVisualizer';
+import { Logo } from '../components/ui/Logo';
+import { MathTraceModal, MathTopic } from '../components/ui/MathTraceModal';
 
 interface ProjectDetailViewProps {
   projectId: number;
   onNavigateToDashboard: () => void;
   onClaimGenerated?: () => void;
+  currencyMode?: 'INR' | 'USD';
 }
 
 export const ProjectDetailView: React.FC<ProjectDetailViewProps> = ({
   projectId,
   onNavigateToDashboard,
-  onClaimGenerated
+  onClaimGenerated,
+  currencyMode = 'INR'
 }) => {
   const [entitlement, setEntitlement] = useState<Entitlement | null>(null);
   const [project, setProject] = useState<Project | null>(null);
@@ -48,18 +60,24 @@ export const ProjectDetailView: React.FC<ProjectDetailViewProps> = ({
   const [claimNotice, setClaimNotice] = useState<ClaimNotice | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
 
+  // Active Tab within Project View
+  const [activeSubTab, setActiveSubTab] = useState<'workbench' | 'pipeline' | 'contract' | 'evidence'>('workbench');
+
+  // Math proof modal
+  const [activeMathTopic, setActiveMathTopic] = useState<MathTopic | null>(null);
+
   // Modals & Drawers state
   const [showSourceClauseModal, setShowSourceClauseModal] = useState<boolean>(false);
   const [showReviewModal, setShowReviewModal] = useState<boolean>(false);
   const [showClaimNoticeModal, setShowClaimNoticeModal] = useState<boolean>(false);
   const [showRecalcDrawer, setShowRecalcDrawer] = useState<boolean>(false);
 
-  // Review Form state
+  // Review Form state (Slide 10 Governance)
   const [reviewDecision, setReviewDecision] = useState<'Approve' | 'Edit' | 'Reject'>('Approve');
   const [reviewEligibleDays, setReviewEligibleDays] = useState<number>(6);
   const [reviewFinancialImpact, setReviewFinancialImpact] = useState<number>(470000);
   const [reviewRationale, setReviewRationale] = useState<string>(
-    "Verified against IMD rain records, site shutdown sign-off DPR #218, and P6 schedule critical path analysis. Recommended for formal notice submission."
+    "Verified against IMD certified weather station log, Resident Engineer sign-off on DPR #218, and Primavera P6 TIA critical path model. Notice issued strictly within 28-day window under Clause 20.1 to avoid contractual forfeiture."
   );
   const [isSubmittingReview, setIsSubmittingReview] = useState<boolean>(false);
   const [copiedNotice, setCopiedNotice] = useState<boolean>(false);
@@ -71,9 +89,7 @@ export const ProjectDetailView: React.FC<ProjectDetailViewProps> = ({
   const [isRecalculating, setIsRecalculating] = useState<boolean>(false);
 
   // UI accordions
-  const [expandFinancials, setExpandFinancials] = useState<boolean>(true);
   const [expandCalendar, setExpandCalendar] = useState<boolean>(false);
-  const [expandTraces, setExpandTraces] = useState<boolean>(false);
 
   const loadProjectData = async () => {
     try {
@@ -188,12 +204,20 @@ export const ProjectDetailView: React.FC<ProjectDetailViewProps> = ({
     }
   };
 
+  const formatCurrency = (valInInr: number) => {
+    if (currencyMode === 'USD') {
+      const usdVal = valInInr / 85;
+      return `$${(usdVal / 1000).toFixed(1)}k`;
+    }
+    return `₹${(valInInr / 100000).toFixed(1)} Lakh`;
+  };
+
   if (loading || !entitlement || !project) {
     return (
       <div className="p-12 flex items-center justify-center min-h-[500px]">
         <div className="flex flex-col items-center gap-3 text-slate-500 text-sm">
           <div className="w-8 h-8 border-3 border-amber-500 border-t-transparent rounded-full animate-spin"></div>
-          <span>Loading Project #042 Workspace & Deterministic Entitlement Analysis...</span>
+          <span className="font-bold">Loading Project #042 Workspace & Deterministic Entitlement Analysis...</span>
         </div>
       </div>
     );
@@ -204,11 +228,18 @@ export const ProjectDetailView: React.FC<ProjectDetailViewProps> = ({
 
   return (
     <div className="p-6 max-w-7xl mx-auto space-y-6">
-      {/* 1. PROJECT HEADER */}
-      <div className="panel-card p-5 bg-white border-slate-200">
+      {/* 1. BREADCRUMBS & PROJECT HEADER */}
+      <div className="panel-card p-5 bg-white border-slate-200 shadow-xs">
         <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
           <div>
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 mb-1">
+              <button
+                onClick={onNavigateToDashboard}
+                className="text-xs font-bold text-slate-500 hover:text-slate-800 transition-colors"
+              >
+                Portfolio
+              </button>
+              <span className="text-slate-300">/</span>
               <span className="font-mono text-xs font-bold px-2 py-0.5 rounded bg-slate-900 text-amber-400">
                 {project.code}
               </span>
@@ -222,17 +253,17 @@ export const ProjectDetailView: React.FC<ProjectDetailViewProps> = ({
                 {project.location}
               </span>
             </div>
-            <h1 className="text-2xl font-extrabold text-slate-900 tracking-tight mt-1">
+            <h1 className="text-2xl font-extrabold text-slate-900 tracking-tight">
               {project.name}
             </h1>
-            <p className="text-xs text-slate-600 mt-0.5">
-              Contract Form: <strong className="text-slate-800">{contracts[0]?.form_type || "FIDIC Red Book (EPC / Design-Build)"}</strong> • Monitoring Period: <strong className="text-slate-800">August 2026</strong> • Contract Value: <strong className="font-mono text-slate-800">₹{(project.contract_value / 10000000).toFixed(1)} Cr</strong>
+            <p className="text-xs text-slate-600 mt-1">
+              Contract Form: <strong className="text-slate-900">{contracts[0]?.form_type || "FIDIC Red Book (EPC / Design-Build)"}</strong> • Monitoring Period: <strong className="text-slate-900">August 2026</strong> • Contract Value: <strong className="font-mono text-slate-900">₹{(project.contract_value / 10000000).toFixed(1)} Cr</strong>
             </p>
           </div>
 
           <div className="flex items-center gap-3 shrink-0">
             <div className="text-right">
-              <div className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">
+              <div className="text-[10.5px] font-bold text-slate-400 uppercase tracking-wider">
                 Claim Status
               </div>
               <div className="mt-0.5">
@@ -243,15 +274,15 @@ export const ProjectDetailView: React.FC<ProjectDetailViewProps> = ({
             {entitlement.status === 'Needs PM Review' ? (
               <button
                 onClick={() => setShowReviewModal(true)}
-                className="px-4 py-2 bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold text-xs rounded transition-colors shadow-xs flex items-center gap-1.5"
+                className="px-4 py-2 bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs rounded-xl transition-all shadow-md flex items-center gap-1.5 hover:scale-[1.02]"
               >
-                <FileSignature className="w-4 h-4" />
-                PM Review Workspace
+                <UserCheck className="w-4 h-4" />
+                PM Review Workspace (Slide 10)
               </button>
             ) : (
               <button
                 onClick={() => setShowClaimNoticeModal(true)}
-                className="px-4 py-2 bg-slate-900 hover:bg-slate-800 text-white font-semibold text-xs rounded transition-colors shadow-xs flex items-center gap-1.5"
+                className="px-4 py-2 bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs rounded-xl transition-all shadow-md flex items-center gap-1.5"
               >
                 <FileText className="w-4 h-4 text-amber-400" />
                 View Generated Claim Notice
@@ -259,396 +290,500 @@ export const ProjectDetailView: React.FC<ProjectDetailViewProps> = ({
             )}
           </div>
         </div>
-      </div>
 
-      {/* 2. ENTITLEMENT SUMMARY HERO CARD */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        {/* Main Status & Trigger */}
-        <div className="panel-card p-4 md:col-span-1 border-amber-300 bg-amber-50/30">
-          <div className="flex items-center justify-between">
-            <span className="text-[11px] font-bold uppercase tracking-wider text-amber-800">
-              Contract Entitlement
-            </span>
-            <ShieldCheck className="w-4 h-4 text-amber-600" />
-          </div>
-          <div className="mt-2 font-bold text-slate-900 text-base leading-snug">
-            Potential Weather Entitlement Detected
-          </div>
-          <p className="mt-1 text-[11px] text-slate-600">
-            Clause 8.4(b) threshold exceeded during August 2026 monitoring window.
-          </p>
-        </div>
-
-        {/* 6 Eligible Days */}
-        <div className="panel-card p-4">
-          <div className="flex items-center justify-between text-slate-500 text-[11px] font-bold uppercase tracking-wider">
-            <span>Eligible Extension (EoT)</span>
-            <FileClock className="w-4 h-4 text-slate-400" />
-          </div>
-          <div className="mt-2 text-3xl font-extrabold font-mono text-slate-900">
-            {entitlement.eligible_days.toFixed(0)}{' '}
-            <span className="text-sm font-sans font-semibold text-slate-500">Days</span>
-          </div>
-          <div className="mt-1 text-[11px] text-slate-500">
-            Contract-rule-driven critical path impact
-          </div>
-        </div>
-
-        {/* ₹4.7 Lakh Estimated Impact */}
-        <div className="panel-card p-4 border-slate-300 bg-slate-900 text-white">
-          <div className="flex items-center justify-between text-slate-300 text-[11px] font-bold uppercase tracking-wider">
-            <span>Estimated Financial Impact</span>
-            <IndianRupee className="w-4 h-4 text-amber-400" />
-          </div>
-          <div className="mt-2 text-3xl font-extrabold font-mono text-amber-400">
-            ₹{(entitlement.estimated_financial_impact / 100000).toFixed(1)}{' '}
-            <span className="text-sm font-sans font-semibold text-slate-300">Lakh</span>
-          </div>
-          <div className="mt-1 text-[11px] text-slate-300">
-            ₹{entitlement.daily_rate.toLocaleString('en-IN', { maximumFractionDigits: 0 })}/day prolongation rate
-          </div>
-        </div>
-
-        {/* Notice Deadline 5 Days Left */}
-        <div className="panel-card p-4 border-rose-200 bg-rose-50/20">
-          <div className="flex items-center justify-between text-rose-800 text-[11px] font-bold uppercase tracking-wider">
-            <span>Notice Deadline</span>
-            <ClockAlert className="w-4 h-4 text-rose-600" />
-          </div>
-          <div className="mt-2 text-3xl font-extrabold font-mono text-rose-700">
-            {entitlement.days_remaining}{' '}
-            <span className="text-sm font-sans font-semibold text-rose-600">Days Left</span>
-          </div>
-          <div className="mt-1 text-[11px] font-semibold text-rose-700">
-            Strict 28-day notice rule expires 07 Sep 2026
-          </div>
-        </div>
-      </div>
-
-      {/* 3. CONTRACT RULE SECTION & STRUCTURED INPUTS */}
-      <div className="panel-card p-5">
-        <div className="flex items-center justify-between pb-3 border-b border-slate-200">
+        {/* Legal Disclaimer Pill */}
+        <div className="mt-3 p-2.5 rounded-lg bg-amber-50/80 border border-amber-200 text-xs text-amber-950 flex items-center justify-between gap-2">
           <div className="flex items-center gap-2">
-            <div className="w-2 h-2 rounded-full bg-amber-500"></div>
-            <h2 className="text-sm font-bold text-slate-900 uppercase tracking-wider">
-              Contract Rule: Clause {activeRule?.clause_number || "8.4(b)"} — Weather Delay
-            </h2>
+            <ShieldCheck className="w-4 h-4 text-amber-700 shrink-0" />
+            <span>
+              <strong>Governance Guardrail:</strong> AI identifies contractual threshold breaches to prevent forfeiture under FIDIC Sub-Clause 20.1. Formal claim determination remains subject to Engineer determination.
+            </span>
           </div>
           <button
-            onClick={() => setShowSourceClauseModal(true)}
-            className="px-2.5 py-1 text-xs font-semibold text-slate-700 bg-slate-100 hover:bg-slate-200 rounded flex items-center gap-1 transition-colors"
+            onClick={() => setActiveMathTopic('financial_4_7_lakh')}
+            className="text-amber-800 font-bold underline font-mono text-[11px] shrink-0 flex items-center gap-1"
           >
-            <ExternalLink className="w-3.5 h-3.5 text-slate-600" />
-            View Source Clause
+            <Calculator className="w-3.5 h-3.5" />
+            Audit Numbers
           </button>
         </div>
 
-        {/* Human Interpretation vs Structured Inputs Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 mt-4">
-          {/* Human readable interpretation */}
-          <div className="lg:col-span-5 space-y-2">
-            <div className="text-xs font-bold text-slate-500 uppercase tracking-wider">
-              Human-Readable Legal Interpretation
-            </div>
-            <p className="text-xs text-slate-700 leading-relaxed bg-slate-50 p-3.5 rounded border border-slate-200">
-              {activeRule?.human_explanation}
-            </p>
-            <div className="flex items-center gap-2 text-[11px] text-slate-500 pt-1">
-              <span className="font-semibold text-slate-700">Clause Mechanism:</span>
-              <span>10-Yr Historical Baseline + Contract Buffer = Entitlement Threshold</span>
-            </div>
-          </div>
-
-          {/* Structured calculation inputs */}
-          <div className="lg:col-span-7 space-y-2">
-            <div className="flex items-center justify-between">
-              <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">
-                Structured Calculation Inputs (Auditable)
-              </span>
+        {/* Workspace Navigation Sub-Tabs */}
+        <div className="flex items-center gap-2 border-t border-slate-100 mt-4 pt-3 overflow-x-auto text-xs">
+          {[
+            { id: 'workbench', label: '1. Entitlement Workbench (Slide 05)', icon: FileCheck2 },
+            { id: 'pipeline', label: '2. Multi-Agent Pipeline (Slide 07)', icon: Layers },
+            { id: 'contract', label: '3. Contract Clause 8.4(b)', icon: FileText },
+            { id: 'evidence', label: '4. Evidence Matrix (8/10)', icon: ShieldCheck },
+          ].map((tab) => {
+            const Icon = tab.icon;
+            const isActive = activeSubTab === tab.id;
+            return (
               <button
-                onClick={() => setShowRecalcDrawer(!showRecalcDrawer)}
-                className="text-[11px] font-semibold text-amber-700 hover:underline flex items-center gap-1"
+                key={tab.id}
+                onClick={() => setActiveSubTab(tab.id as any)}
+                className={`px-3 py-1.5 rounded-lg font-bold flex items-center gap-1.5 transition-colors shrink-0 ${
+                  isActive
+                    ? 'bg-slate-900 text-amber-400 shadow-xs'
+                    : 'text-slate-600 hover:bg-slate-100'
+                }`}
               >
-                <Sliders className="w-3 h-3" />
-                {showRecalcDrawer ? "Hide Engine Playground" : "Test Custom Variables"}
+                <Icon className="w-3.5 h-3.5" />
+                {tab.label}
+              </button>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* ========================================================================= */}
+      {/* TAB 1: WORKBENCH (SLIDE 05 CONTRACT RULE IN ACTION) */}
+      {/* ========================================================================= */}
+      {activeSubTab === 'workbench' && (
+        <div className="space-y-6">
+          {/* SLIDE 05 INFOGRAPHIC CARD: HOW THE WEATHER ENGINE REASONS */}
+          <div className="panel-card p-5 border-amber-300 bg-amber-50/20 shadow-sm space-y-4">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-amber-200/80 pb-3">
+              <div>
+                <div className="flex items-center gap-2">
+                  <span className="text-[10px] font-extrabold uppercase tracking-wider px-2 py-0.5 bg-amber-500 text-slate-950 rounded font-mono">
+                    CONTRACT RULE IN ACTION · SLIDE 05
+                  </span>
+                  <span className="text-xs font-bold text-slate-900">
+                    PROJECT #042 · CONTRACT CLAUSE 8.4(b) — WEATHER DELAY
+                  </span>
+                </div>
+                <p className="text-xs text-slate-700 italic mt-1">
+                  &ldquo;If accumulated adverse-weather days in a monitoring period exceed the historical baseline by more than 4 days, Contractor is entitled to a time extension.&rdquo;
+                </p>
+              </div>
+
+              <div className="flex items-center gap-2 shrink-0">
+                <button
+                  onClick={() => setActiveMathTopic('weather_threshold_12_2')}
+                  className="px-2.5 py-1 text-xs font-bold text-slate-800 bg-white hover:bg-slate-100 border border-slate-300 rounded-lg flex items-center gap-1 transition-colors"
+                  title="Where did 12.2 and 14 days come from?"
+                >
+                  <Calculator className="w-3.5 h-3.5 text-amber-600" />
+                  Audit 12.2d Threshold
+                </button>
+                <button
+                  onClick={() => setShowRecalcDrawer(!showRecalcDrawer)}
+                  className="px-2.5 py-1 text-xs font-bold text-amber-900 bg-amber-100 hover:bg-amber-200 border border-amber-300 rounded-lg flex items-center gap-1 transition-colors"
+                >
+                  <Sliders className="w-3.5 h-3.5 text-amber-700" />
+                  {showRecalcDrawer ? "Hide Playground" : "Test Variables"}
+                </button>
+              </div>
+            </div>
+
+            {/* Slide 5 Equation Visual Stack */}
+            <div className="grid grid-cols-1 md:grid-cols-5 gap-3 text-center">
+              {/* 1. Baseline */}
+              <button
+                onClick={() => setActiveMathTopic('weather_threshold_12_2')}
+                className="p-3.5 rounded-xl bg-white border border-slate-200 shadow-2xs hover:border-amber-400 transition-all text-left"
+              >
+                <div className="text-2xl font-extrabold font-mono text-slate-900 flex items-center justify-between">
+                  <span>{entitlement.historical_baseline_days} days</span>
+                  <Calculator className="w-3.5 h-3.5 text-slate-400" />
+                </div>
+                <div className="text-[11px] font-semibold text-slate-500 mt-1 uppercase tracking-wider">
+                  Historical baseline (10-Yr)
+                </div>
+              </button>
+
+              {/* 2. Margin */}
+              <button
+                onClick={() => setActiveMathTopic('weather_threshold_12_2')}
+                className="p-3.5 rounded-xl bg-white border border-slate-200 shadow-2xs hover:border-amber-400 transition-all text-left"
+              >
+                <div className="text-2xl font-extrabold font-mono text-slate-900 flex items-center justify-between">
+                  <span>+ {entitlement.contractual_margin_days} days</span>
+                  <Calculator className="w-3.5 h-3.5 text-slate-400" />
+                </div>
+                <div className="text-[11px] font-semibold text-slate-500 mt-1 uppercase tracking-wider">
+                  Contract margin (8.4b)
+                </div>
+              </button>
+
+              {/* 3. Threshold */}
+              <button
+                onClick={() => setActiveMathTopic('weather_threshold_12_2')}
+                className="p-3.5 rounded-xl bg-amber-500 text-slate-950 border border-amber-600 shadow-sm hover:bg-amber-400 transition-all text-left"
+              >
+                <div className="text-2xl font-extrabold font-mono flex items-center justify-between">
+                  <span>{entitlement.threshold_days} days</span>
+                  <Calculator className="w-3.5 h-3.5 text-slate-950" />
+                </div>
+                <div className="text-[11px] font-extrabold uppercase tracking-wider mt-1">
+                  Contractual Threshold
+                </div>
+              </button>
+
+              {/* 4. Actual Days */}
+              <button
+                onClick={() => setActiveMathTopic('weather_threshold_12_2')}
+                className="p-3.5 rounded-xl bg-[#0B1120] text-amber-400 border border-slate-800 shadow-sm hover:border-amber-400 transition-all text-left"
+              >
+                <div className="text-2xl font-extrabold font-mono flex items-center justify-between">
+                  <span>{entitlement.actual_adverse_days} days</span>
+                  <Calculator className="w-3.5 h-3.5 text-amber-400" />
+                </div>
+                <div className="text-[11px] font-semibold text-slate-300 mt-1 uppercase tracking-wider">
+                  Actual rainy days (Aug)
+                </div>
+              </button>
+
+              {/* 5. Trigger Outcome */}
+              <div className="p-3.5 rounded-xl bg-rose-600 text-white border border-rose-700 shadow-sm flex flex-col justify-center text-left">
+                <div className="text-xl font-extrabold tracking-tight">
+                  EXCEEDED
+                </div>
+                <div className="text-[10.5px] font-mono text-rose-100 mt-1">
+                  {entitlement.actual_adverse_days} &gt; {entitlement.threshold_days} → Potential Entitlement
+                </div>
+              </div>
+            </div>
+
+            {/* Slide 5 Entitlement Highlights Row */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-3 pt-1">
+              {/* Potential Entitlement Summary */}
+              <button
+                onClick={() => setActiveMathTopic('financial_4_7_lakh')}
+                className="p-3 rounded-xl bg-slate-900 text-white border border-slate-800 text-left hover:border-amber-400 transition-all group"
+              >
+                <div className="flex items-center justify-between">
+                  <span className="text-[10.5px] uppercase font-bold text-amber-400 tracking-wider">
+                    POTENTIAL PROLONGATION EXPOSURE
+                  </span>
+                  <Calculator className="w-3.5 h-3.5 text-amber-400 group-hover:scale-110 transition-transform" />
+                </div>
+                <div className="text-xs font-semibold text-slate-200 mt-1">
+                  <strong>{entitlement.eligible_days} eligible days</strong> · Est. exposure <strong>{formatCurrency(entitlement.estimated_financial_impact)}</strong> · Evidence <strong>{entitlement.evidence_score}/{entitlement.evidence_total} complete</strong>
+                </div>
+              </button>
+
+              {/* Notice Countdown */}
+              <button
+                onClick={() => setActiveMathTopic('deadline_5_days')}
+                className="p-3 rounded-xl bg-rose-50 border border-rose-200 text-left hover:border-rose-400 transition-all group flex items-center justify-between"
+              >
+                <div>
+                  <span className="text-[10.5px] uppercase font-extrabold text-rose-900 tracking-wider">
+                    NOTICE WINDOW (FIDIC 20.1)
+                  </span>
+                  <div className="text-lg font-extrabold font-mono text-rose-700 mt-0.5">
+                    {entitlement.days_remaining} DAYS LEFT
+                  </div>
+                </div>
+                <ClockAlert className="w-7 h-7 text-rose-600 shrink-0 group-hover:scale-110 transition-transform" />
+              </button>
+
+              {/* Action Button to PM Review Gate */}
+              <button
+                onClick={() => setShowReviewModal(true)}
+                className="p-3 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold text-xs shadow-sm flex items-center justify-center gap-2 transition-all hover:scale-[1.02]"
+              >
+                <span>REVIEW CLAIM →</span>
+                <span className="text-[11px] font-normal font-mono opacity-90">(PM Review Gate)</span>
               </button>
             </div>
 
-            <div className="grid grid-cols-3 sm:grid-cols-6 gap-2 text-center font-mono">
-              <div className="p-2 rounded bg-slate-50 border border-slate-200">
-                <div className="text-[10px] font-sans font-semibold text-slate-500 uppercase">Baseline</div>
-                <div className="text-sm font-bold text-slate-900 mt-0.5">{entitlement.historical_baseline_days}d</div>
-              </div>
-              <div className="p-2 rounded bg-slate-50 border border-slate-200">
-                <div className="text-[10px] font-sans font-semibold text-slate-500 uppercase">Margin</div>
-                <div className="text-sm font-bold text-slate-900 mt-0.5">+{entitlement.contractual_margin_days}d</div>
-              </div>
-              <div className="p-2 rounded bg-amber-50 border border-amber-200 text-amber-900">
-                <div className="text-[10px] font-sans font-bold uppercase">Threshold</div>
-                <div className="text-sm font-extrabold mt-0.5">{entitlement.threshold_days}d</div>
-              </div>
-              <div className="p-2 rounded bg-slate-900 text-amber-400 border border-slate-800">
-                <div className="text-[10px] font-sans font-bold uppercase text-slate-300">Actual</div>
-                <div className="text-sm font-extrabold mt-0.5">{entitlement.actual_adverse_days}d</div>
-              </div>
-              <div className="p-2 rounded bg-emerald-50 border border-emerald-200 text-emerald-900">
-                <div className="text-[10px] font-sans font-bold uppercase">Trigger</div>
-                <div className="text-sm font-extrabold mt-0.5">{entitlement.is_triggered ? '14 > 12.2' : 'No'}</div>
-              </div>
-              <div className="p-2 rounded bg-slate-100 border border-slate-300 text-slate-900">
-                <div className="text-[10px] font-sans font-bold uppercase">Eligible</div>
-                <div className="text-sm font-extrabold mt-0.5">{entitlement.eligible_days}d</div>
-              </div>
-            </div>
-
-            {/* Recalculation Engine Drawer */}
+            {/* Recalculation Engine Playground Drawer */}
             {showRecalcDrawer && (
-              <div className="mt-3 p-3.5 bg-slate-900 text-slate-100 rounded-lg border border-slate-800 text-xs space-y-3">
+              <div className="mt-4 p-4 bg-[#0B1120] text-slate-100 rounded-xl border border-slate-800 text-xs space-y-3">
                 <div className="flex items-center justify-between border-b border-slate-800 pb-2">
                   <span className="font-bold text-amber-400 flex items-center gap-1.5">
-                    <Sliders className="w-3.5 h-3.5" />
-                    Deterministic Backend Engine Playground
+                    <Sliders className="w-4 h-4" />
+                    Deterministic Calculation Engine Playground
                   </span>
                   <button
                     onClick={handleResetDefaults}
-                    className="text-[10px] text-slate-400 hover:text-white flex items-center gap-1"
+                    className="text-[11px] text-slate-400 hover:text-white flex items-center gap-1 font-semibold"
                   >
-                    <RotateCcw className="w-3 h-3" /> Reset Project #042 Defaults
+                    <RotateCcw className="w-3.5 h-3.5" /> Reset Project #042 Baseline (8.2 + 4.0 = 12.2d)
                   </button>
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                   <div>
-                    <label className="block text-[10px] text-slate-400 mb-1">Historical Baseline (Days)</label>
+                    <label className="block text-[11px] text-slate-400 mb-1 font-semibold">10-Year Historical Baseline (Days)</label>
                     <input
                       type="number"
                       step="0.1"
                       value={calcBaseline}
                       onChange={(e) => setCalcBaseline(Number(e.target.value))}
-                      className="w-full bg-slate-800 border border-slate-700 rounded px-2.5 py-1 text-slate-100 font-mono text-xs focus:ring-1 focus:ring-amber-500"
+                      className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-1.5 text-slate-100 font-mono text-xs focus:ring-1 focus:ring-amber-500"
                     />
                   </div>
                   <div>
-                    <label className="block text-[10px] text-slate-400 mb-1">Contract Margin (Days)</label>
+                    <label className="block text-[11px] text-slate-400 mb-1 font-semibold">Contract Margin Buffer (Days)</label>
                     <input
                       type="number"
                       step="0.1"
                       value={calcMargin}
                       onChange={(e) => setCalcMargin(Number(e.target.value))}
-                      className="w-full bg-slate-800 border border-slate-700 rounded px-2.5 py-1 text-slate-100 font-mono text-xs focus:ring-1 focus:ring-amber-500"
+                      className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-1.5 text-slate-100 font-mono text-xs focus:ring-1 focus:ring-amber-500"
                     />
                   </div>
                   <div>
-                    <label className="block text-[10px] text-slate-400 mb-1">Actual Adverse Days (August)</label>
+                    <label className="block text-[11px] text-slate-400 mb-1 font-semibold">Actual Recorded Adverse Days (August)</label>
                     <input
                       type="number"
                       step="0.5"
                       value={calcActualDays}
                       onChange={(e) => setCalcActualDays(Number(e.target.value))}
-                      className="w-full bg-slate-800 border border-slate-700 rounded px-2.5 py-1 text-slate-100 font-mono text-xs focus:ring-1 focus:ring-amber-500"
+                      className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-1.5 text-slate-100 font-mono text-xs focus:ring-1 focus:ring-amber-500"
                     />
                   </div>
                 </div>
                 <button
                   onClick={handleRecalculate}
                   disabled={isRecalculating}
-                  className="w-full py-1.5 bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold rounded transition-colors text-xs flex items-center justify-center gap-1.5"
+                  className="w-full py-2 bg-amber-500 hover:bg-amber-400 text-slate-950 font-extrabold rounded-lg transition-colors text-xs flex items-center justify-center gap-1.5 shadow-sm"
                 >
-                  {isRecalculating ? "Calculating on backend..." : "Run Backend Deterministic Calculation"}
+                  {isRecalculating ? "Executing Python deterministic engine..." : "Run Backend Deterministic Calculation"}
                 </button>
               </div>
             )}
           </div>
-        </div>
-      </div>
 
-      {/* 4. WEATHER ANALYSIS & VISUAL COMPARISON */}
-      <div className="panel-card p-5">
-        <div className="flex items-center justify-between pb-3 border-b border-slate-200">
-          <div>
-            <h2 className="text-sm font-bold text-slate-900 uppercase tracking-wider">
-              Weather Analysis: August 2026
-            </h2>
-            <p className="text-xs text-slate-500 mt-0.5">
-              10-Year IMD Meteorological Baseline vs Actual On-Site Automatic Weather Station Log.
-            </p>
-          </div>
-          <button
-            onClick={() => setExpandCalendar(!expandCalendar)}
-            className="text-xs font-semibold text-slate-700 hover:text-slate-900 flex items-center gap-1"
-          >
-            {expandCalendar ? "Hide Daily Logs" : `View All 14 Adverse Dates (${weatherData.length} Days)`}
-            {expandCalendar ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
-          </button>
-        </div>
+          {/* Grid: Financial Breakdown (Left) + Weather Timeline & Calendar (Right) */}
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+            {/* Financial Composition (5 cols) */}
+            <div className="lg:col-span-5 panel-card p-5 space-y-4">
+              <div className="flex items-center justify-between pb-2 border-b border-slate-200">
+                <h2 className="text-xs font-bold text-slate-900 uppercase tracking-wider flex items-center gap-1.5">
+                  <IndianRupee className="w-4 h-4 text-amber-600" />
+                  Prolongation Financial Composition
+                </h2>
+                <button
+                  onClick={() => setActiveMathTopic('financial_4_7_lakh')}
+                  className="text-xs font-mono font-bold text-amber-800 hover:underline flex items-center gap-1"
+                >
+                  <span>{formatCurrency(entitlement.estimated_financial_impact)}</span>
+                  <Calculator className="w-3 h-3" />
+                </button>
+              </div>
 
-        {/* Clean visual comparison component */}
-        <div className="mt-4 p-4 rounded-lg bg-slate-50 border border-slate-200">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
-            {/* Arithmetic Stack */}
-            <div className="space-y-2 font-mono text-xs">
-              <div className="flex justify-between items-center py-1 border-b border-slate-200">
-                <span className="text-slate-600 font-sans">Historical Baseline (10-Yr Avg)</span>
-                <span className="font-bold text-slate-800">8.2 days</span>
+              <div className="space-y-2 text-xs">
+                <div className="flex justify-between py-1.5 border-b border-slate-100">
+                  <span className="text-slate-600">Eligible Delay (Time Extension):</span>
+                  <button
+                    onClick={() => setActiveMathTopic('delay_6_days')}
+                    className="font-mono font-bold text-slate-900 hover:underline"
+                  >
+                    {entitlement.eligible_days} Calendar Days
+                  </button>
+                </div>
+                <div className="flex justify-between py-1.5 border-b border-slate-100">
+                  <span className="text-slate-600">Daily Prolongation Burn Rate:</span>
+                  <span className="font-mono font-bold text-slate-900">₹{entitlement.daily_rate.toLocaleString('en-IN', { maximumFractionDigits: 0 })} / day</span>
+                </div>
               </div>
-              <div className="flex justify-between items-center py-1 border-b border-slate-200">
-                <span className="text-slate-600 font-sans">Contractual Margin Buffer</span>
-                <span className="font-bold text-slate-800">+4.0 days</span>
+
+              {/* Line items */}
+              <div className="space-y-2 pt-1">
+                <div className="text-[11px] font-bold text-slate-700 uppercase">Auditable Cost Breakdown:</div>
+                {entitlement.financial_breakdown_json?.map((item, idx) => (
+                  <div key={idx} className="p-2.5 rounded-lg bg-slate-50 border border-slate-200 flex justify-between items-center text-xs">
+                    <div>
+                      <div className="font-bold text-slate-800">{item.category}</div>
+                      <div className="text-[10.5px] text-slate-500">{item.description}</div>
+                    </div>
+                    <div className="text-right font-mono font-bold text-slate-900 shrink-0 ml-2">
+                      ₹{item.total.toLocaleString('en-IN')}
+                    </div>
+                  </div>
+                ))}
               </div>
-              <div className="flex justify-between items-center py-1.5 border-b-2 border-slate-400 bg-amber-50/50 px-2 rounded">
-                <span className="font-bold text-amber-900 font-sans">Entitlement Threshold</span>
-                <span className="font-extrabold text-amber-900 text-sm">12.2 days</span>
-              </div>
-              <div className="flex justify-between items-center py-1.5 px-2 bg-slate-900 text-white rounded">
-                <span className="font-bold text-slate-100 font-sans">Actual Adverse Days Recorded</span>
-                <span className="font-extrabold text-amber-400 text-sm">14.0 days</span>
-              </div>
+
+              <button
+                onClick={() => setActiveMathTopic('financial_4_7_lakh')}
+                className="w-full py-2 bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold text-xs rounded-lg border border-slate-300 transition-colors flex items-center justify-center gap-1.5"
+              >
+                <Calculator className="w-3.5 h-3.5 text-amber-600" />
+                Where Did ₹4.7L Come From? (Full Math Proof)
+              </button>
             </div>
 
-            {/* Visual Bar Comparison */}
-            <div className="space-y-3">
-              <div>
-                <div className="flex justify-between text-xs font-semibold text-slate-700 mb-1">
-                  <span>Threshold vs Actual Days</span>
-                  <span className="text-amber-700 font-bold">14.0 &gt; 12.2 Days</span>
+            {/* Weather Observation Log & Calendar (7 cols) */}
+            <div className="lg:col-span-7 panel-card p-5 space-y-4">
+              <div className="flex items-center justify-between pb-2 border-b border-slate-200">
+                <div>
+                  <h2 className="text-xs font-bold text-slate-900 uppercase tracking-wider flex items-center gap-1.5">
+                    <Calendar className="w-4 h-4 text-sky-600" />
+                    August 2026 Weather Observation Log
+                  </h2>
+                  <p className="text-xs text-slate-500 mt-0.5">
+                    14 adverse precipitation & inundation days recorded on-site.
+                  </p>
                 </div>
-                <div className="relative h-6 bg-slate-200 rounded overflow-hidden">
-                  {/* Baseline fill */}
-                  <div
-                    className="absolute left-0 top-0 bottom-0 bg-slate-400"
-                    style={{ width: `${(8.2 / 16) * 100}%` }}
-                    title="Historical Baseline: 8.2d"
-                  ></div>
-                  {/* Margin fill */}
-                  <div
-                    className="absolute top-0 bottom-0 bg-amber-400"
-                    style={{ left: `${(8.2 / 16) * 100}%`, width: `${(4.0 / 16) * 100}%` }}
-                    title="Margin Buffer: 4.0d"
-                  ></div>
-                  {/* Actual Marker */}
-                  <div
-                    className="absolute top-0 bottom-0 bg-slate-900 opacity-90"
-                    style={{ left: `${(14.0 / 16) * 100}%`, width: '4px' }}
-                    title="Actual Days: 14.0d"
-                  ></div>
-                </div>
-                <div className="flex justify-between text-[10px] text-slate-500 mt-1 font-mono">
-                  <span>0d</span>
-                  <span>Baseline (8.2d)</span>
-                  <span>Threshold (12.2d)</span>
-                  <span className="font-bold text-slate-900">Actual (14.0d)</span>
-                </div>
+                <button
+                  onClick={() => setExpandCalendar(!expandCalendar)}
+                  className="px-2.5 py-1 text-xs font-bold bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg flex items-center gap-1 transition-colors"
+                >
+                  {expandCalendar ? "Collapse" : "Expand All 31 Days"}
+                </button>
               </div>
 
-              <div className="p-2.5 rounded bg-emerald-50 border border-emerald-200 flex items-center justify-between text-xs">
-                <div className="flex items-center gap-1.5 text-emerald-900 font-semibold">
-                  <CheckCircle2 className="w-4 h-4 text-emerald-600" />
-                  <span>THRESHOLD PASSED: Contractual Entitlement Established</span>
-                </div>
-                <span className="font-mono font-bold text-emerald-800 bg-emerald-100 px-2 py-0.5 rounded">
-                  +1.8d Excess over Threshold / 6.0d EoT
-                </span>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Expandable Daily August Calendar Log */}
-        {expandCalendar && (
-          <div className="mt-4 border-t border-slate-200 pt-4">
-            <h3 className="text-xs font-bold text-slate-800 uppercase tracking-wider mb-2">
-              August 2026 Adverse Event Log ({adverseObservations.length} Adverse Days)
-            </h3>
-            <div className="overflow-x-auto max-h-64 overflow-y-auto border border-slate-200 rounded">
-              <table className="w-full text-left border-collapse text-xs">
-                <thead className="bg-slate-100 text-slate-600 sticky top-0">
-                  <tr>
-                    <th className="px-3 py-2">Date</th>
-                    <th className="px-3 py-2 text-right">Rainfall (mm)</th>
-                    <th className="px-3 py-2 text-right">Wind (km/h)</th>
-                    <th className="px-3 py-2">Trigger Classification</th>
-                    <th className="px-3 py-2">On-Site Disruption Logged</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-slate-100">
-                  {adverseObservations.map((obs) => (
-                    <tr key={obs.id} className="hover:bg-amber-50/50">
-                      <td className="px-3 py-1.5 font-mono font-semibold text-slate-900">
-                        {obs.obs_date}
-                      </td>
-                      <td className="px-3 py-1.5 text-right font-mono font-bold text-slate-800">
-                        {obs.rainfall_mm} mm
-                      </td>
-                      <td className="px-3 py-1.5 text-right font-mono text-slate-700">
-                        {obs.wind_kmh} km/h
-                      </td>
-                      <td className="px-3 py-1.5 text-slate-700">
-                        {obs.adverse_trigger_reason}
-                      </td>
-                      <td className="px-3 py-1.5 font-medium text-slate-900">
-                        {obs.site_impact_logged}
-                      </td>
+              {/* Adverse Events Table */}
+              <div className="overflow-x-auto max-h-72 overflow-y-auto border border-slate-200 rounded-xl">
+                <table className="w-full text-left border-collapse text-xs">
+                  <thead className="bg-slate-50 text-slate-600 sticky top-0 border-b border-slate-200">
+                    <tr>
+                      <th className="px-3 py-2 font-bold">Date</th>
+                      <th className="px-3 py-2 font-bold text-right">Rain (mm)</th>
+                      <th className="px-3 py-2 font-bold text-right">Wind (km/h)</th>
+                      <th className="px-3 py-2 font-bold">Adverse Reason</th>
+                      <th className="px-3 py-2 font-bold">Site Log Sign-Off</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
+                  </thead>
+                  <tbody className="divide-y divide-slate-100">
+                    {(expandCalendar ? weatherData : adverseObservations).map((obs) => (
+                      <tr
+                        key={obs.id}
+                        className={`hover:bg-slate-50 ${
+                          obs.is_adverse ? 'bg-amber-50/40 font-medium' : ''
+                        }`}
+                      >
+                        <td className="px-3 py-2 font-mono font-bold text-slate-900">
+                          {obs.obs_date}
+                        </td>
+                        <td className="px-3 py-2 text-right font-mono font-bold text-slate-800">
+                          {obs.rainfall_mm} mm
+                        </td>
+                        <td className="px-3 py-2 text-right font-mono text-slate-600">
+                          {obs.wind_kmh} km/h
+                        </td>
+                        <td className="px-3 py-2 text-slate-700">
+                          {obs.adverse_trigger_reason || <span className="text-slate-400">Normal weather</span>}
+                        </td>
+                        <td className="px-3 py-2 font-semibold text-slate-900 truncate max-w-[180px]" title={obs.site_impact_logged}>
+                          {obs.site_impact_logged || <span className="text-slate-400">—</span>}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
             </div>
           </div>
-        )}
-      </div>
+        </div>
+      )}
 
-      {/* 5. EVIDENCE SECTION (8/10 COMPLETENESS) & IMPACT ANALYSIS */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-        {/* Evidence Panel (7 cols) */}
-        <div className="lg:col-span-7 panel-card p-5 space-y-4">
-          <div className="flex items-center justify-between pb-3 border-b border-slate-200">
+      {/* ========================================================================= */}
+      {/* TAB 2: MULTI-AGENT PIPELINE (SLIDE 06 & 07) */}
+      {/* ========================================================================= */}
+      {activeSubTab === 'pipeline' && (
+        <MultiAgentVisualizer onOpenReview={() => setShowReviewModal(true)} />
+      )}
+
+      {/* ========================================================================= */}
+      {/* TAB 3: CONTRACT CLAUSE & LEGAL INTERPRETATION */}
+      {/* ========================================================================= */}
+      {activeSubTab === 'contract' && (
+        <div className="panel-card p-6 space-y-4">
+          <div className="flex items-center justify-between border-b border-slate-200 pb-3">
             <div>
-              <h2 className="text-sm font-bold text-slate-900 uppercase tracking-wider">
-                Contemporary Evidence Matrix
+              <span className="text-xs font-bold text-amber-700 uppercase tracking-wider">
+                FIDIC Red Book (EPC / Design-Build)
+              </span>
+              <h2 className="text-lg font-bold text-slate-900 mt-0.5">
+                Sub-Clause 8.4 [Extension of Time for Completion] & Clause 20.1 [Contractor Claims]
+              </h2>
+            </div>
+            <span className="text-xs font-mono font-bold px-2.5 py-1 bg-slate-900 text-amber-400 rounded-md">
+              Document: GCC_Riverside_Complex_Executed_Final.pdf
+            </span>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="space-y-2">
+              <label className="text-xs font-bold text-slate-500 uppercase tracking-wider block">
+                Raw Contract Clause Text (Executed PDF):
+              </label>
+              <div className="p-4 bg-slate-50 rounded-xl border border-slate-200 font-mono text-xs text-slate-800 whitespace-pre-wrap leading-relaxed">
+                {activeRule?.raw_clause_text}
+              </div>
+            </div>
+
+            <div className="space-y-3">
+              <label className="text-xs font-bold text-slate-500 uppercase tracking-wider block">
+                AI Extracted & Human-Verified Legal Interpretation:
+              </label>
+              <div className="p-4 bg-amber-50/50 rounded-xl border border-amber-200 text-xs text-slate-800 space-y-2 leading-relaxed">
+                <p>{activeRule?.human_explanation}</p>
+                <div className="pt-2 border-t border-amber-200/80 font-mono text-[11px] text-amber-900 space-y-1">
+                  <div>• Baseline Allowance: <strong>{activeRule?.historical_baseline_days} Days</strong></div>
+                  <div>• Margin Threshold: <strong>+{activeRule?.contractual_margin_days} Days</strong></div>
+                  <div>• Statutory Notice Window: <strong>28 Calendar Days</strong></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ========================================================================= */}
+      {/* TAB 4: CONTEMPORARY EVIDENCE MATRIX */}
+      {/* ========================================================================= */}
+      {activeSubTab === 'evidence' && (
+        <div className="panel-card p-6 space-y-4">
+          <div className="flex items-center justify-between border-b border-slate-200 pb-3">
+            <div>
+              <h2 className="text-base font-bold text-slate-900">
+                Contemporary Records Dossier (FIDIC Sub-Clause 20.1)
               </h2>
               <p className="text-xs text-slate-500 mt-0.5">
-                Substantiation required under FIDIC Sub-Clause 20.1.
+                Automated collation of weather station certificates, signed daily site progress logs, and Primavera critical path analyses.
               </p>
             </div>
-            <div className="flex items-center gap-1.5 px-2.5 py-1 rounded bg-slate-900 text-white text-xs font-mono font-bold">
-              <span>Evidence Completeness:</span>
-              <span className="text-amber-400">{entitlement.evidence_score}/{entitlement.evidence_total}</span>
+            <div className="font-mono text-xs font-bold px-3 py-1.5 bg-slate-900 text-white rounded-lg">
+              Completeness Score: <span className="text-amber-400">{entitlement.evidence_score}/{entitlement.evidence_total}</span>
             </div>
           </div>
 
-          <div className="space-y-2.5">
+          <div className="space-y-3">
             {entitlement.evidence_items.map((ev) => (
               <div
                 key={ev.id}
-                className={`p-3 rounded-lg border text-xs transition-colors ${
+                className={`p-4 rounded-xl border transition-all ${
                   ev.is_missing
-                    ? 'bg-rose-50/40 border-rose-200'
-                    : 'bg-slate-50/70 border-slate-200 hover:bg-slate-50'
+                    ? 'bg-rose-50/30 border-rose-200'
+                    : 'bg-slate-50/80 border-slate-200 hover:bg-slate-50'
                 }`}
               >
-                <div className="flex items-start justify-between gap-2">
-                  <div className="space-y-0.5">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                  <div className="space-y-1">
                     <div className="flex items-center gap-2">
-                      <span className="font-semibold px-1.5 py-0.2 bg-slate-200 text-slate-700 rounded text-[10px] uppercase">
+                      <span className="px-2 py-0.5 rounded text-[10px] font-bold uppercase bg-slate-200 text-slate-800">
                         {ev.type}
                       </span>
-                      <span className="font-mono text-[11px] text-slate-500">{ev.date}</span>
-                      <span className="text-slate-400">•</span>
-                      <span className="text-[11px] text-slate-600 font-medium">Source: {ev.source}</span>
+                      <span className="font-mono text-xs text-slate-500">{ev.date}</span>
+                      <span className="text-slate-300">•</span>
+                      <span className="text-xs text-slate-600 font-semibold">Source: {ev.source}</span>
                     </div>
-                    <div className="font-bold text-slate-900 text-xs mt-1">{ev.title}</div>
-                    <p className="text-slate-600 text-[11px] mt-0.5">{ev.relevance}</p>
+                    <h3 className="text-sm font-bold text-slate-900">{ev.title}</h3>
+                    <p className="text-xs text-slate-600">{ev.relevance}</p>
+                    {ev.file_attachment && (
+                      <div className="text-[11px] font-mono text-slate-500 pt-1 flex items-center gap-1">
+                        <FileText className="w-3.5 h-3.5 text-slate-400" />
+                        Attachment: <span className="text-slate-700 font-bold underline">{ev.file_attachment}</span>
+                      </div>
+                    )}
                   </div>
 
                   <div className="shrink-0">
                     {ev.verification_status === 'Verified' ? (
-                      <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[11px] font-bold bg-emerald-100 text-emerald-800">
-                        <CheckCircle2 className="w-3 h-3 text-emerald-600" />
+                      <span className="px-2.5 py-1 rounded-lg text-xs font-bold bg-emerald-100 text-emerald-800 flex items-center gap-1">
+                        <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
                         Verified
                       </span>
                     ) : (
-                      <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[11px] font-bold bg-rose-100 text-rose-800">
-                        <AlertTriangle className="w-3 h-3 text-rose-600" />
-                        Missing (2 pts)
+                      <span className="px-2.5 py-1 rounded-lg text-xs font-bold bg-rose-100 text-rose-800 flex items-center gap-1">
+                        <AlertTriangle className="w-3.5 h-3.5 text-rose-600" />
+                        Missing Slump Log (-2 pts)
                       </span>
                     )}
                   </div>
@@ -657,314 +792,197 @@ export const ProjectDetailView: React.FC<ProjectDetailViewProps> = ({
             ))}
           </div>
         </div>
-
-        {/* Impact & Deadline Sentinel (5 cols) */}
-        <div className="lg:col-span-5 space-y-6">
-          {/* Time & Financial Impact Analysis */}
-          <div className="panel-card p-5 space-y-3">
-            <div className="flex items-center justify-between pb-2 border-b border-slate-200">
-              <h2 className="text-xs font-bold text-slate-900 uppercase tracking-wider">
-                Impact Analysis (Auditable Inputs)
-              </h2>
-              <span className="text-xs font-mono font-bold text-slate-900">
-                ₹{(entitlement.estimated_financial_impact / 100000).toFixed(1)} Lakh Total
-              </span>
-            </div>
-
-            <div className="space-y-2 text-xs">
-              <div className="flex justify-between py-1.5 border-b border-slate-100">
-                <span className="text-slate-600">Eligible Delay (Time Impact):</span>
-                <span className="font-mono font-bold text-slate-900">{entitlement.eligible_days} Calendar Days</span>
-              </div>
-              <div className="flex justify-between py-1.5 border-b border-slate-100">
-                <span className="text-slate-600">Daily Prolongation Burn Rate:</span>
-                <span className="font-mono font-bold text-slate-900">₹{entitlement.daily_rate.toLocaleString('en-IN', { maximumFractionDigits: 0 })} / day</span>
-              </div>
-            </div>
-
-            {/* Expandable Financial Line Items */}
-            <div className="pt-2">
-              <div className="text-[11px] font-bold text-slate-700 uppercase mb-1.5">
-                Financial Breakdown Composition:
-              </div>
-              <div className="space-y-1.5 text-xs">
-                {entitlement.financial_breakdown_json?.map((item, idx) => (
-                  <div key={idx} className="p-2 rounded bg-slate-50 border border-slate-200 flex justify-between items-center">
-                    <div>
-                      <div className="font-semibold text-slate-800">{item.category}</div>
-                      <div className="text-[10px] text-slate-500">{item.description}</div>
-                    </div>
-                    <div className="text-right font-mono font-bold text-slate-900 shrink-0 ml-2">
-                      ₹{item.total.toLocaleString('en-IN')}
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-
-          {/* Deadline Sentinel Card */}
-          <div className="panel-card p-5 border-amber-300 bg-amber-50/20 space-y-3">
-            <div className="flex items-center justify-between">
-              <span className="text-xs font-bold text-amber-900 uppercase tracking-wider flex items-center gap-1.5">
-                <ClockAlert className="w-4 h-4 text-amber-600" />
-                Notice Deadline Sentinel
-              </span>
-              <RiskBadge level={entitlement.risk_level} />
-            </div>
-
-            <div className="p-3 bg-white rounded border border-amber-200 text-xs space-y-2">
-              <div className="flex justify-between">
-                <span className="text-slate-500">Event Detection Date:</span>
-                <span className="font-mono font-semibold text-slate-800">{entitlement.detection_date}</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-slate-500">Contractual Notice Window:</span>
-                <span className="font-mono font-semibold text-slate-800">{entitlement.notice_window_days} Days (Clause 20.1)</span>
-              </div>
-              <div className="flex justify-between border-t border-slate-100 pt-1">
-                <span className="text-slate-700 font-bold">Calculated Deadline:</span>
-                <span className="font-mono font-bold text-rose-700">{entitlement.notice_deadline_date}</span>
-              </div>
-              <div className="flex justify-between border-t border-slate-100 pt-1 text-sm">
-                <span className="font-bold text-slate-900">Days Remaining:</span>
-                <span className="font-mono font-extrabold text-amber-600">{entitlement.days_remaining} Days</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* 6. MODAL: SOURCE CLAUSE VIEW */}
-      {showSourceClauseModal && (
-        <div className="fixed inset-0 bg-slate-950/60 z-50 flex items-center justify-center p-4">
-          <div className="bg-white rounded-lg max-w-2xl w-full p-6 shadow-xl border border-slate-300 space-y-4">
-            <div className="flex items-center justify-between border-b border-slate-200 pb-3">
-              <div className="flex items-center gap-2">
-                <FileText className="w-5 h-5 text-amber-600" />
-                <h3 className="text-base font-bold text-slate-900">
-                  Source Contract Clause: Sub-Clause 8.4(b)
-                </h3>
-              </div>
-              <button
-                onClick={() => setShowSourceClauseModal(false)}
-                className="text-slate-400 hover:text-slate-600 text-lg font-bold"
-              >
-                ✕
-              </button>
-            </div>
-
-            <div className="text-xs text-slate-700 space-y-3 font-mono bg-slate-50 p-4 rounded border border-slate-200 leading-relaxed max-h-96 overflow-y-auto">
-              <p className="font-bold text-slate-900 font-sans text-sm">
-                FIDIC Red Book Conditions of Contract — Sub-Clause 8.4 [Extension of Time for Completion]
-              </p>
-              <p>{activeRule?.raw_clause_text}</p>
-            </div>
-
-            <div className="flex justify-between items-center pt-2">
-              <span className="text-xs text-slate-500">
-                Document: <strong className="text-slate-700">GCC_Riverside_Complex_Executed_Final.pdf</strong> (Page 48)
-              </span>
-              <button
-                onClick={() => setShowSourceClauseModal(false)}
-                className="px-4 py-1.5 bg-slate-900 text-white text-xs font-semibold rounded hover:bg-slate-800"
-              >
-                Close Preview
-              </button>
-            </div>
-          </div>
-        </div>
       )}
 
-      {/* 7. MODAL: PM REVIEW & APPROVAL WORKSPACE */}
+      {/* ========================================================================= */}
+      {/* MODAL 1: PM REVIEW & GOVERNANCE WORKSPACE (SLIDE 10) */}
+      {/* ========================================================================= */}
       {showReviewModal && (
-        <div className="fixed inset-0 bg-slate-950/70 z-50 flex items-center justify-center p-4">
-          <div className="bg-white rounded-lg max-w-2xl w-full p-6 shadow-2xl border border-slate-300 space-y-5">
+        <div className="fixed inset-0 bg-slate-950/70 z-50 flex items-center justify-center p-4 backdrop-blur-xs">
+          <div className="bg-white rounded-2xl max-w-2xl w-full p-6 shadow-2xl border border-slate-300 space-y-4 animate-in fade-in zoom-in-95 duration-150">
             <div className="flex items-center justify-between border-b border-slate-200 pb-3">
-              <div>
-                <span className="text-[10px] font-bold text-amber-700 uppercase tracking-wider">
-                  Human-In-The-Loop Approval Gateway
-                </span>
-                <h3 className="text-base font-bold text-slate-900">
-                  Project Manager Review: Project #042 Delay Claim
-                </h3>
+              <div className="flex items-center gap-2">
+                <UserCheck className="w-5 h-5 text-amber-600" />
+                <div>
+                  <h3 className="text-base font-bold text-slate-900">
+                    PM Human Review Gate (Slide 10 Governance)
+                  </h3>
+                  <p className="text-xs text-slate-500">
+                    &ldquo;AI Proposes. A Human Approves. ALWAYS.&rdquo;
+                  </p>
+                </div>
               </div>
               <button
                 onClick={() => setShowReviewModal(false)}
-                className="text-slate-400 hover:text-slate-600 text-lg font-bold"
+                className="p-1 rounded-lg text-slate-400 hover:text-slate-700"
               >
-                ✕
+                <XCircle className="w-5 h-5" />
               </button>
             </div>
 
-            {/* Why was this flagged */}
-            <div className="p-3.5 bg-amber-50/50 rounded-lg border border-amber-200 text-xs space-y-1.5">
-              <div className="font-bold text-amber-900 flex items-center gap-1.5">
-                <HelpCircle className="w-3.5 h-3.5 text-amber-600" />
-                Why was this entitlement flagged by EntitlementIQ?
-              </div>
-              <ul className="list-disc list-inside text-slate-700 space-y-0.5 text-[11px]">
-                <li>Clause 8.4(b) threshold (12.2 days) exceeded: <strong>14.0 actual adverse rain days</strong> logged.</li>
-                <li>Critical path delay impact confirmed on Substructure Concreting (<strong>6.0 eligible days</strong>).</li>
-                <li>Estimated recoverable prolongation value: <strong>₹4.7 Lakh</strong>.</li>
-                <li>Notice window compliance: <strong>5 calendar days remaining</strong> before contractual forfeiture.</li>
-              </ul>
+            {/* Decision selector */}
+            <div className="grid grid-cols-3 gap-3">
+              <button
+                type="button"
+                onClick={() => setReviewDecision('Approve')}
+                className={`p-3 rounded-xl border text-center font-bold text-xs transition-all ${
+                  reviewDecision === 'Approve'
+                    ? 'bg-emerald-600 text-white border-emerald-700 shadow-md ring-2 ring-emerald-500/20'
+                    : 'bg-slate-50 text-slate-700 hover:bg-slate-100 border-slate-200'
+                }`}
+              >
+                <CheckCircle2 className="w-4 h-4 mx-auto mb-1" />
+                ✓ Approve & Issue Claim
+              </button>
+
+              <button
+                type="button"
+                onClick={() => setReviewDecision('Edit')}
+                className={`p-3 rounded-xl border text-center font-bold text-xs transition-all ${
+                  reviewDecision === 'Edit'
+                    ? 'bg-amber-500 text-slate-950 border-amber-600 shadow-md ring-2 ring-amber-500/20'
+                    : 'bg-slate-50 text-slate-700 hover:bg-slate-100 border-slate-200'
+                }`}
+              >
+                <Edit3 className="w-4 h-4 mx-auto mb-1" />
+                ✎ Edit Parameters
+              </button>
+
+              <button
+                type="button"
+                onClick={() => setReviewDecision('Reject')}
+                className={`p-3 rounded-xl border text-center font-bold text-xs transition-all ${
+                  reviewDecision === 'Reject'
+                    ? 'bg-rose-600 text-white border-rose-700 shadow-md ring-2 ring-rose-500/20'
+                    : 'bg-slate-50 text-slate-700 hover:bg-slate-100 border-slate-200'
+                }`}
+              >
+                <XCircle className="w-4 h-4 mx-auto mb-1" />
+                ✕ Reject Event
+              </button>
             </div>
 
-            {/* Action Selector */}
-            <div className="space-y-1">
-              <label className="text-xs font-bold text-slate-700">Select PM Decision:</label>
-              <div className="grid grid-cols-3 gap-2">
-                <button
-                  type="button"
-                  onClick={() => setReviewDecision('Approve')}
-                  className={`py-2 px-3 rounded text-xs font-bold flex items-center justify-center gap-1.5 transition-colors ${
-                    reviewDecision === 'Approve'
-                      ? 'bg-emerald-600 text-white shadow-xs'
-                      : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
-                  }`}
-                >
-                  <CheckCircle2 className="w-4 h-4" /> Approve Claim
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setReviewDecision('Edit')}
-                  className={`py-2 px-3 rounded text-xs font-bold flex items-center justify-center gap-1.5 transition-colors ${
-                    reviewDecision === 'Edit'
-                      ? 'bg-amber-600 text-white shadow-xs'
-                      : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
-                  }`}
-                >
-                  <Edit3 className="w-4 h-4" /> Edit Values
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setReviewDecision('Reject')}
-                  className={`py-2 px-3 rounded text-xs font-bold flex items-center justify-center gap-1.5 transition-colors ${
-                    reviewDecision === 'Reject'
-                      ? 'bg-rose-600 text-white shadow-xs'
-                      : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
-                  }`}
-                >
-                  <XCircle className="w-4 h-4" /> Reject Entitlement
-                </button>
+            {/* Parameters adjustment */}
+            <div className="grid grid-cols-2 gap-3 text-xs">
+              <div>
+                <label className="block text-slate-700 font-bold mb-1">
+                  Eligible Days Claimed (EoT):
+                </label>
+                <input
+                  type="number"
+                  value={reviewEligibleDays}
+                  onChange={(e) => setReviewEligibleDays(Number(e.target.value))}
+                  className="w-full bg-slate-50 border border-slate-300 rounded-lg p-2 font-mono font-bold text-slate-900"
+                />
+              </div>
+              <div>
+                <label className="block text-slate-700 font-bold mb-1">
+                  Estimated Prolongation Exposure (₹):
+                </label>
+                <input
+                  type="number"
+                  value={reviewFinancialImpact}
+                  onChange={(e) => setReviewFinancialImpact(Number(e.target.value))}
+                  className="w-full bg-slate-50 border border-slate-300 rounded-lg p-2 font-mono font-bold text-slate-900"
+                />
               </div>
             </div>
 
-            {/* Adjustable Values if Edit mode */}
-            {reviewDecision === 'Edit' && (
-              <div className="grid grid-cols-2 gap-3 p-3 bg-slate-50 rounded border border-slate-200 text-xs">
-                <div>
-                  <label className="block text-slate-600 font-semibold mb-1">Adjust Eligible Days:</label>
-                  <input
-                    type="number"
-                    value={reviewEligibleDays}
-                    onChange={(e) => setReviewEligibleDays(Number(e.target.value))}
-                    className="w-full border border-slate-300 rounded px-2.5 py-1.5 font-mono text-slate-900"
-                  />
-                </div>
-                <div>
-                  <label className="block text-slate-600 font-semibold mb-1">Adjust Financial Claim (₹):</label>
-                  <input
-                    type="number"
-                    value={reviewFinancialImpact}
-                    onChange={(e) => setReviewFinancialImpact(Number(e.target.value))}
-                    className="w-full border border-slate-300 rounded px-2.5 py-1.5 font-mono text-slate-900"
-                  />
-                </div>
-              </div>
-            )}
-
-            {/* PM Rationale */}
-            <div className="space-y-1">
-              <label className="text-xs font-bold text-slate-700">PM Notes & Decision Rationale:</label>
+            <div>
+              <label className="block text-xs font-bold text-slate-700 mb-1">
+                Project Manager Written Rationale & Sign-Off Notes:
+              </label>
               <textarea
+                rows={3}
                 value={reviewRationale}
                 onChange={(e) => setReviewRationale(e.target.value)}
-                rows={3}
-                className="w-full border border-slate-300 rounded p-2 text-xs text-slate-800 focus:ring-1 focus:ring-amber-500 focus:outline-none"
-                placeholder="Enter formal justification for audit trail..."
+                className="w-full bg-slate-50 border border-slate-300 rounded-lg p-2.5 text-xs text-slate-800 leading-relaxed focus:ring-1 focus:ring-amber-500"
               />
             </div>
 
-            {/* Submit CTA */}
-            <div className="flex items-center justify-end gap-2 pt-2 border-t border-slate-200">
+            <div className="flex items-center justify-end gap-2 border-t border-slate-200 pt-3">
               <button
+                type="button"
                 onClick={() => setShowReviewModal(false)}
-                className="px-3.5 py-1.5 text-xs text-slate-600 font-semibold hover:bg-slate-100 rounded"
+                className="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-xs rounded-lg"
               >
                 Cancel
               </button>
               <button
+                type="button"
                 onClick={handleSubmitReview}
                 disabled={isSubmittingReview}
-                className="px-4 py-2 bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs rounded transition-colors shadow-xs flex items-center gap-1.5"
+                className="px-4 py-2 bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs rounded-lg transition-colors flex items-center gap-1.5 shadow-md"
               >
-                {isSubmittingReview ? "Recording Decision..." : "Confirm & Generate Claim Notice"}
+                <Send className="w-3.5 h-3.5 text-amber-400" />
+                {isSubmittingReview ? "Recording PM Decision..." : "Submit PM Decision"}
               </button>
             </div>
           </div>
         </div>
       )}
 
-      {/* 8. MODAL: FORMAL CLAIM NOTICE PREVIEW & EXPORT */}
+      {/* ========================================================================= */}
+      {/* MODAL 2: FORMAL LEGAL CLAIM NOTICE (FIDIC CLAUSE 20.1) */}
+      {/* ========================================================================= */}
       {showClaimNoticeModal && claimNotice && (
-        <div className="fixed inset-0 bg-slate-950/70 z-50 flex items-center justify-center p-4">
-          <div className="bg-white rounded-lg max-w-3xl w-full p-6 shadow-2xl border border-slate-300 space-y-4 max-h-[90vh] flex flex-col">
-            <div className="flex items-center justify-between border-b border-slate-200 pb-3">
+        <div className="fixed inset-0 bg-slate-950/70 z-50 flex items-center justify-center p-4 backdrop-blur-xs">
+          <div className="bg-white rounded-2xl max-w-3xl w-full p-6 shadow-2xl border border-slate-300 space-y-4 max-h-[90vh] flex flex-col animate-in fade-in zoom-in-95 duration-150">
+            <div className="flex items-center justify-between border-b border-slate-200 pb-3 shrink-0">
               <div className="flex items-center gap-2">
-                <FileSignature className="w-5 h-5 text-emerald-600" />
+                <Logo variant="icon" size="sm" />
                 <div>
                   <h3 className="text-base font-bold text-slate-900">
-                    Generated Claim Notice Document
+                    Official Contractor Notice of Claim
                   </h3>
-                  <span className="text-xs font-mono text-slate-500">
-                    Ref: {claimNotice.claim_reference || claimNotice.notice_reference} • FIDIC Sub-Clause 20.1
+                  <span className="text-[11px] font-mono text-slate-500">
+                    FIDIC Sub-Clause 20.1 & Clause 8.4(b)
                   </span>
                 </div>
-              </div>
-              <button
-                onClick={() => setShowClaimNoticeModal(false)}
-                className="text-slate-400 hover:text-slate-600 text-lg font-bold"
-              >
-                ✕
-              </button>
-            </div>
-
-            {/* Printable Notice Text Area */}
-            <div
-              id="printable-claim-notice"
-              className="flex-1 overflow-y-auto font-mono text-xs text-slate-800 bg-slate-50 p-5 rounded border border-slate-200 whitespace-pre-wrap leading-relaxed select-text"
-            >
-              {claimNotice.formal_notice_text}
-            </div>
-
-            {/* Actions: Print / Download / Copy */}
-            <div className="flex items-center justify-between pt-2 border-t border-slate-200">
-              <div className="text-[11px] text-emerald-700 font-semibold flex items-center gap-1">
-                <CheckCircle2 className="w-3.5 h-3.5" />
-                Ready for Service to Employer / Engineer
               </div>
 
               <div className="flex items-center gap-2">
                 <button
                   onClick={handleCopyNotice}
-                  className="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-semibold rounded flex items-center gap-1 transition-colors"
+                  className="px-2.5 py-1 text-xs font-bold bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg flex items-center gap-1 transition-colors"
                 >
                   {copiedNotice ? <Check className="w-3.5 h-3.5 text-emerald-600" /> : <Copy className="w-3.5 h-3.5" />}
-                  {copiedNotice ? "Copied!" : "Copy Text"}
+                  {copiedNotice ? "Copied!" : "Copy"}
                 </button>
                 <button
                   onClick={() => window.print()}
-                  className="px-3 py-1.5 bg-amber-500 hover:bg-amber-600 text-slate-950 text-xs font-bold rounded flex items-center gap-1 transition-colors shadow-2xs"
+                  className="px-3 py-1 bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs rounded-lg flex items-center gap-1 shadow-xs transition-colors"
                 >
                   <Printer className="w-3.5 h-3.5" />
-                  Print / Save PDF
+                  Print / PDF
+                </button>
+                <button
+                  onClick={() => setShowClaimNoticeModal(false)}
+                  className="p-1 rounded-lg text-slate-400 hover:text-slate-700"
+                >
+                  <XCircle className="w-5 h-5" />
                 </button>
               </div>
             </div>
+
+            {/* Document Body with Letterhead */}
+            <div
+              id="printable-claim-notice"
+              className="flex-1 overflow-y-auto p-6 bg-slate-50 border border-slate-200 rounded-xl font-mono text-xs text-slate-800 whitespace-pre-wrap leading-relaxed select-text shadow-2xs"
+            >
+              {claimNotice.formal_notice_text}
+            </div>
           </div>
         </div>
+      )}
+
+      {/* Math Proof & Traceability Modal */}
+      {activeMathTopic && (
+        <MathTraceModal
+          isOpen={!!activeMathTopic}
+          onClose={() => setActiveMathTopic(null)}
+          topic={activeMathTopic}
+        />
       )}
     </div>
   );

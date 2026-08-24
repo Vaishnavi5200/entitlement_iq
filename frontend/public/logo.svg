@@ -1,0 +1,121 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" width="100%" height="100%">
+  <defs>
+    <!-- Background Gradient -->
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0F172A" />
+      <stop offset="50%" stop-color="#0B1120" />
+      <stop offset="100%" stop-color="#050811" />
+    </linearGradient>
+
+    <!-- Shield Gold Outer Gradient -->
+    <linearGradient id="goldShield" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FCD34D" />
+      <stop offset="50%" stop-color="#F59E0B" />
+      <stop offset="100%" stop-color="#D97706" />
+    </linearGradient>
+
+    <!-- Shield Inner Metal Gradient -->
+    <linearGradient id="innerShield" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1E293B" />
+      <stop offset="50%" stop-color="#0F172A" />
+      <stop offset="100%" stop-color="#090D16" />
+    </linearGradient>
+
+    <!-- Cloud Metallic Gradient -->
+    <linearGradient id="cloudGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#94A3B8" />
+      <stop offset="50%" stop-color="#64748B" />
+      <stop offset="100%" stop-color="#475569" />
+    </linearGradient>
+
+    <!-- Lightning Yellow Gradient -->
+    <linearGradient id="lightningGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FEF08A" />
+      <stop offset="50%" stop-color="#FBBF24" />
+      <stop offset="100%" stop-color="#F59E0B" />
+    </linearGradient>
+
+    <!-- Building Gray Gradient -->
+    <linearGradient id="buildingGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#64748B" />
+      <stop offset="100%" stop-color="#334155" />
+    </linearGradient>
+  </defs>
+
+  <!-- Squircle Rounded App Icon Base -->
+  <rect width="400" height="400" rx="80" fill="url(#bgGrad)" />
+
+  <!-- Inner Ambient Glow Behind Shield -->
+  <circle cx="200" cy="170" r="120" fill="#F59E0B" opacity="0.08" filter="blur(30px)" />
+
+  <!-- Shield Outer Border (Golden) -->
+  <path d="M 200 60 C 265 80 285 95 285 160 C 285 225 240 265 200 280 C 160 265 115 225 115 160 C 115 95 135 80 200 60 Z" 
+        fill="none" 
+        stroke="url(#goldShield)" 
+        stroke-width="14" 
+        stroke-linejoin="round" />
+
+  <!-- Shield Inner Fill -->
+  <path d="M 200 68 C 258 86 275 100 275 158 C 275 218 234 254 200 268 C 166 254 125 218 125 158 C 125 100 142 86 200 68 Z" 
+        fill="url(#innerShield)" />
+
+  <!-- Construction Crane & Buildings (Left Side of Shield) -->
+  <g transform="translate(20, -5)">
+    <!-- Tower Crane Mast -->
+    <line x1="135" y1="120" x2="135" y2="210" stroke="#94A3B8" stroke-width="4.5" stroke-linecap="round" />
+    <!-- Crane Jib (Horizontal) -->
+    <line x1="110" y1="125" x2="175" y2="125" stroke="#94A3B8" stroke-width="4" stroke-linecap="round" />
+    <!-- Crane Tower Peak -->
+    <line x1="135" y1="110" x2="135" y2="125" stroke="#94A3B8" stroke-width="4" />
+    <!-- Crane Tie Cables -->
+    <line x1="135" y1="110" x2="165" y2="125" stroke="#64748B" stroke-width="2" />
+    <line x1="135" y1="110" x2="115" y2="125" stroke="#64748B" stroke-width="2" />
+    <!-- Crane Hook Line -->
+    <line x1="165" y1="125" x2="165" y2="148" stroke="#FCD34D" stroke-width="2.5" />
+    <path d="M 165 148 C 165 153 160 153 160 148" fill="none" stroke="#FCD34D" stroke-width="2.5" />
+
+    <!-- Building Structures -->
+    <!-- Tower 1 -->
+    <polygon points="140,165 158,150 158,230 140,230" fill="url(#buildingGrad)" />
+    <!-- Tower 2 -->
+    <polygon points="158,150 178,135 178,230 158,230" fill="#475569" />
+    <polygon points="178,170 195,155 195,225 178,225" fill="#334155" />
+  </g>
+
+  <!-- Weather Elements (Right Side of Shield) -->
+  <g transform="translate(15, -10)">
+    <!-- Storm Cloud -->
+    <path d="M 215 140 C 215 130 223 122 233 122 C 236 114 245 108 255 108 C 267 108 277 116 279 126 C 285 126 290 131 290 138 C 290 145 284 150 277 150 L 222 150 C 216 150 215 145 215 140 Z" 
+          fill="url(#cloudGrad)" />
+
+    <!-- Rain Streaks -->
+    <line x1="225" y1="158" x2="220" y2="175" stroke="#94A3B8" stroke-width="3" stroke-linecap="round" opacity="0.85" />
+    <line x1="237" y1="162" x2="232" y2="182" stroke="#94A3B8" stroke-width="3" stroke-linecap="round" opacity="0.85" />
+    <line x1="262" y1="162" x2="257" y2="182" stroke="#94A3B8" stroke-width="3" stroke-linecap="round" opacity="0.85" />
+    <line x1="275" y1="158" x2="270" y2="175" stroke="#94A3B8" stroke-width="3" stroke-linecap="round" opacity="0.85" />
+
+    <!-- Lightning Bolt -->
+    <polygon points="252,148 238,172 248,172 242,192 258,165 248,165" 
+             fill="url(#lightningGrad)" 
+             filter="drop-shadow(0 0 6px #F59E0B)" />
+  </g>
+
+  <!-- Prominent Golden Checkmark Swoosh across bottom-right -->
+  <path d="M 165 235 L 202 268 C 215 250 248 200 295 168 C 275 195 240 252 205 278 Z" 
+        fill="url(#goldShield)" 
+        filter="drop-shadow(0 4px 10px rgba(0,0,0,0.5))" />
+
+  <!-- Brand Typography: EntitlementIQ -->
+  <text x="200" y="332" text-anchor="middle" font-family="system-ui, -apple-system, BlinkMacSystemFont, 'Inter', sans-serif" font-size="34" font-weight="800" letter-spacing="-0.5">
+    <tspan fill="#FFFFFF">Entitlement</tspan><tspan fill="#F59E0B">IQ</tspan>
+  </text>
+
+  <!-- Tagline: CONSTRUCTION CLAIMS SENTINEL -->
+  <g transform="translate(200, 360)">
+    <line x1="-155" y1="-5" x2="-130" y2="-5" stroke="#475569" stroke-width="1.5" />
+    <text x="0" y="0" text-anchor="middle" font-family="system-ui, -apple-system, BlinkMacSystemFont, 'Inter', sans-serif" font-size="10.5" font-weight="700" fill="#94A3B8" letter-spacing="3">
+      CONSTRUCTION CLAIMS SENTINEL
+    </text>
+    <line x1="130" y1="-5" x2="155" y2="-5" stroke="#475569" stroke-width="1.5" />
+  </g>
+</svg>

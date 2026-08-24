@@ -9,6 +9,7 @@ import { DeadlinesView } from './views/DeadlinesView';
 import { ClaimsView } from './views/ClaimsView';
 import { ContractUploadView } from './views/ContractUploadView';
 import { AuditLogView } from './views/AuditLogView';
+import { PitchDeckWalkthroughModal } from './components/ui/PitchDeckWalkthroughModal';
 import { api, DashboardMetrics, Project, Entitlement } from './api/client';
 
 export const App: React.FC = () => {
@@ -19,6 +20,8 @@ export const App: React.FC = () => {
   const [currentEntitlement, setCurrentEntitlement] = useState<Entitlement | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [isRefreshing, setIsRefreshing] = useState<boolean>(false);
+  const [isPitchGuideOpen, setIsPitchGuideOpen] = useState<boolean>(false);
+  const [currencyMode, setCurrencyMode] = useState<'INR' | 'USD'>('INR');
 
   const loadInitialData = async () => {
     try {
@@ -49,7 +52,7 @@ export const App: React.FC = () => {
       setIsRefreshing(true);
       const [mRes, ent] = await Promise.all([
         api.getDashboardMetrics(),
-        api.getEntitlement(selectedProjectId === 1 ? 1 : 1)
+        api.getEntitlement(selectedProjectId)
       ]);
       setMetrics(mRes);
       setCurrentEntitlement(ent);
@@ -70,14 +73,19 @@ export const App: React.FC = () => {
     setActiveTab('project-detail');
   };
 
+  const toggleCurrency = () => {
+    setCurrencyMode(prev => prev === 'INR' ? 'USD' : 'INR');
+  };
+
   return (
-    <div className="flex h-screen overflow-hidden bg-[#F8F9FA] text-slate-900">
+    <div className="flex h-screen overflow-hidden bg-[#F4F6F8] text-slate-900">
       {/* Left Navigation Sidebar */}
       <Sidebar
         activeTab={activeTab}
         setActiveTab={setActiveTab}
         selectedProjectId={selectedProjectId}
         setSelectedProjectId={setSelectedProjectId}
+        onOpenPitchGuide={() => setIsPitchGuideOpen(true)}
       />
 
       {/* Main Content Area */}
@@ -92,6 +100,9 @@ export const App: React.FC = () => {
           }}
           onRefresh={handleRefresh}
           isRefreshing={isRefreshing}
+          onOpenPitchGuide={() => setIsPitchGuideOpen(true)}
+          currencyMode={currencyMode}
+          onToggleCurrency={toggleCurrency}
         />
 
         {/* View Container */}
@@ -102,6 +113,8 @@ export const App: React.FC = () => {
               loading={loading}
               onSelectClaim={handleSelectClaim}
               onNavigateToUpload={() => setActiveTab('contract-upload')}
+              onOpenPitchGuide={() => setIsPitchGuideOpen(true)}
+              currencyMode={currencyMode}
             />
           )}
 
@@ -110,6 +123,7 @@ export const App: React.FC = () => {
               projectId={selectedProjectId}
               onNavigateToDashboard={() => setActiveTab('dashboard')}
               onClaimGenerated={handleRefresh}
+              currencyMode={currencyMode}
             />
           )}
 
@@ -125,6 +139,7 @@ export const App: React.FC = () => {
               projectId={selectedProjectId}
               onNavigateToDashboard={() => setActiveTab('dashboard')}
               onClaimGenerated={handleRefresh}
+              currencyMode={currencyMode}
             />
           )}
 
@@ -163,6 +178,16 @@ export const App: React.FC = () => {
           )}
         </main>
       </div>
+
+      {/* Interactive Pitch Deck & PS #13 Solution Walkthrough Modal */}
+      <PitchDeckWalkthroughModal
+        isOpen={isPitchGuideOpen}
+        onClose={() => setIsPitchGuideOpen(false)}
+        onNavigateToDemo={(projId) => {
+          setSelectedProjectId(projId || 1);
+          setActiveTab('project-detail');
+        }}
+      />
     </div>
   );
 };
