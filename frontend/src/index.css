@@ -1,0 +1,45 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-[#F8F9FA] text-[#0F172A] font-sans antialiased selection:bg-amber-100 selection:text-amber-900;
+  }
+}
+
+/* Custom crisp border and table utility */
+.panel-card {
+  @apply bg-white border border-slate-200/90 rounded-lg shadow-sm;
+}
+
+.table-header {
+  @apply px-3 py-2.5 text-left text-xs font-semibold uppercase tracking-wider text-slate-500 bg-slate-50/80 border-b border-slate-200;
+}
+
+.table-cell {
+  @apply px-3 py-3 text-sm text-slate-700 border-b border-slate-100 whitespace-nowrap;
+}
+
+/* Print formatting for legal claim notice */
+@media print {
+  body * {
+    visibility: hidden;
+  }
+  #printable-claim-notice, #printable-claim-notice * {
+    visibility: visible;
+  }
+  #printable-claim-notice {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    margin: 0;
+    padding: 20px;
+    background: white;
+    border: none;
+    box-shadow: none;
+  }
+}
