@@ -223,8 +223,8 @@ export const ProjectDetailView: React.FC<ProjectDetailViewProps> = ({
     );
   }
 
-  const activeRule = entitlement.rule || contracts[0]?.rules[0];
-  const adverseObservations = weatherData.filter(w => w.is_adverse);
+  const activeRule = entitlement?.rule || (contracts[0]?.rules && contracts[0].rules.length > 0 ? contracts[0].rules[0] : null);
+  const adverseObservations = weatherData?.filter(w => w.is_adverse) || [];
 
   return (
     <div className="p-6 max-w-7xl mx-auto space-y-6">
