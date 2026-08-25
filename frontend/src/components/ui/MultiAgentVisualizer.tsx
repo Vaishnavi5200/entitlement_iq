@@ -142,7 +142,7 @@ export const MultiAgentVisualizer: React.FC<MultiAgentVisualizerProps> = ({
             <span className="text-[10px] font-extrabold uppercase tracking-wider px-2 py-0.5 rounded bg-amber-500 text-slate-950 font-mono">
               System Architecture
             </span>
-            <span className="text-xs text-slate-400 font-mono">Multi-Agent Claims Pipeline</span>
+            <span className="text-xs text-slate-400 font-mono">Autonomous Analysis Pipeline</span>
           </div>
           <h3 className="text-sm font-bold text-slate-100">
             &ldquo;AI for clause interpretation, deterministic computation for mathematics.&rdquo;
@@ -158,7 +158,7 @@ export const MultiAgentVisualizer: React.FC<MultiAgentVisualizerProps> = ({
             className="shrink-0 px-3 py-1.5 bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs rounded-lg transition-colors flex items-center gap-1.5 shadow-xs"
           >
             <UserCheck className="w-3.5 h-3.5" />
-            Open PM Human Gate
+            Open PM Approval Gate
           </button>
         )}
       </div>

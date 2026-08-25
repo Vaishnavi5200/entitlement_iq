@@ -285,7 +285,7 @@ export const ProjectDetailView: React.FC<ProjectDetailViewProps> = ({
                 className="px-4 py-2 bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs rounded-xl transition-all shadow-md flex items-center gap-1.5"
               >
                 <FileText className="w-4 h-4 text-amber-400" />
-                View Generated Claim Notice
+                View Draft Claim Notice
               </button>
             )}
           </div>
@@ -312,7 +312,7 @@ export const ProjectDetailView: React.FC<ProjectDetailViewProps> = ({
         <div className="flex items-center gap-2 border-t border-slate-100 mt-4 pt-3 overflow-x-auto text-xs">
           {[
             { id: 'workbench', label: '1. Entitlement Workbench', icon: FileCheck2 },
-            { id: 'pipeline', label: '2. Multi-Agent Pipeline', icon: Layers },
+            { id: 'pipeline', label: '2. Analysis Pipeline', icon: Layers },
             { id: 'contract', label: '3. Contract Clause 8.4(b)', icon: FileText },
             { id: 'evidence', label: '4. Evidence Matrix (8/10)', icon: ShieldCheck },
           ].map((tab) => {
@@ -438,7 +438,7 @@ export const ProjectDetailView: React.FC<ProjectDetailViewProps> = ({
               {/* 5. Trigger Outcome */}
               <div className="p-3.5 rounded-xl bg-rose-600 text-white border border-rose-700 shadow-sm flex flex-col justify-center text-left">
                 <div className="text-xl font-extrabold tracking-tight">
-                  EXCEEDED
+                  THRESHOLD EXCEEDED
                 </div>
                 <div className="text-[10.5px] font-mono text-rose-100 mt-1">
                   {entitlement.actual_adverse_days} &gt; {entitlement.threshold_days} → Potential Entitlement

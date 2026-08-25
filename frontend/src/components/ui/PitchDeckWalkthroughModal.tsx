@@ -36,22 +36,22 @@ export const PitchDeckWalkthroughModal: React.FC<PitchDeckWalkthroughModalProps>
 
   const slides = [
     {
-      id: 'section-1',
-      title: 'EntitlementIQ — Construction Claims Intelligence',
-      subtitle: 'Automated contract delay entitlement detection and notice preservation',
-      tag: 'Overview & Mission',
+      id: 'step-1-detect',
+      title: '1. Detect: Automated Threshold Surveillance',
+      subtitle: 'Continuous monitoring of weather and site metrics against contract baselines',
+      tag: 'Step 01 · Detect',
       content: (
-        <div className="space-y-4">
+        <div className="space-y-4 text-xs">
           <div className="p-4 rounded-xl bg-slate-900 text-white border border-slate-800 flex items-center justify-between gap-4">
             <div>
-              <div className="text-xs font-mono text-amber-400 font-bold uppercase tracking-wider">
-                Enterprise Claims Intelligence
+              <div className="text-[10.5px] font-mono text-amber-400 font-bold uppercase tracking-wider">
+                Continuous Anomaly Detection
               </div>
-              <h3 className="text-lg font-extrabold mt-1">
-                &ldquo;Detect the delay. Prove the entitlement. Beat the deadline.&rdquo;
+              <h3 className="text-base font-extrabold mt-1">
+                Automated Meteorological Ingestion
               </h3>
               <p className="text-xs text-slate-300 mt-1">
-                Detecting recoverable construction claims before statutory contractual notice deadlines expire.
+                Live automated weather stations (AWS) stream daily precipitation, wind gusts, and temperature against official 10-year historical IMD baselines.
               </p>
             </div>
             <div className="hidden sm:block">
@@ -59,17 +59,17 @@ export const PitchDeckWalkthroughModal: React.FC<PitchDeckWalkthroughModalProps>
             </div>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
-            <div className="p-3.5 rounded-lg bg-amber-50/50 border border-amber-200">
-              <span className="font-bold text-amber-900 block mb-1">Contract-Encoded Rules:</span>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div className="p-3 rounded-lg bg-slate-50 border border-slate-200">
+              <span className="font-bold text-slate-900 block mb-1">Baseline Comparison:</span>
               <p className="text-slate-700">
-                <strong>Weather Entitlement Engine</strong>. Weather is contract-encoded with clear measurable thresholds (e.g. FIDIC 8.4b), meaning entitlement is computed deterministically, not guessed.
+                Measures actual adverse rain days (14.0 days) directly against historical August baseline allowance (8.2 days).
               </p>
             </div>
-            <div className="p-3.5 rounded-lg bg-slate-50 border border-slate-200">
-              <span className="font-bold text-slate-900 block mb-1">Core Claims Workflow:</span>
-              <p className="font-mono text-amber-800 font-bold">
-                Event → Entitlement → Evidence → Impact → Deadline → PM Approval
+            <div className="p-3 rounded-lg bg-amber-50/50 border border-amber-200">
+              <span className="font-bold text-amber-900 block mb-1">Why Weather First?</span>
+              <p className="text-slate-700">
+                Weather is empirical and measurable. Entitlement is computed deterministically rather than subject to narrative dispute.
               </p>
             </div>
           </div>
@@ -77,127 +77,151 @@ export const PitchDeckWalkthroughModal: React.FC<PitchDeckWalkthroughModalProps>
       )
     },
     {
-      id: 'section-2',
-      title: 'The Challenge: Disconnected Records & Strict Notice Clocks',
-      subtitle: 'The bottleneck in construction claims is correlating evidence in time',
-      tag: 'Problem & Industry Context',
-      content: (
-        <div className="space-y-4 text-xs">
-          <p className="text-slate-700 leading-relaxed">
-            Every major construction project generates large volumes of disconnected data. When delays occur, evidence is scattered across disparate sources:
-          </p>
-
-          <div className="grid grid-cols-2 sm:grid-cols-6 gap-2 text-center">
-            {['Site Reports', 'RFIs', 'P6 Schedules', 'Weather Logs', 'Site Photos', 'Contracts'].map((s) => (
-              <div key={s} className="p-2.5 rounded-lg bg-slate-100 border border-slate-200 font-semibold text-slate-800">
-                {s}
-              </div>
-            ))}
-          </div>
-
-          <div className="p-3.5 rounded-xl bg-rose-50 border border-rose-200 text-rose-950 flex items-center justify-between">
-            <div>
-              <div className="font-bold">The Statutory Clock Does Not Wait</div>
-              <p className="text-[11px] text-rose-800 mt-0.5">
-                FIDIC Sub-Clause 20.1 mandates a strict 28-day notice window. Missing this deadline can forfeit rights to prolongation cost recovery.
-              </p>
-            </div>
-            <ClockAlert className="w-8 h-8 text-rose-600 shrink-0 ml-3" />
-          </div>
-        </div>
-      )
-    },
-    {
-      id: 'section-3',
-      title: 'Deterministic Calculation & Mathematical Proof',
-      subtitle: 'Every rupee, day count, and threshold has a step-by-step arithmetic derivation',
-      tag: 'Calculation Architecture',
+      id: 'step-2-validate',
+      title: '2. Validate: AI-Assisted Contract Analysis',
+      subtitle: 'Extracting structured numerical parameters from contractual clauses',
+      tag: 'Step 02 · Validate',
       content: (
         <div className="space-y-3.5 text-xs">
-          <div className="p-3 rounded-lg bg-slate-900 text-slate-100 font-mono text-[11px]">
-            <span className="text-amber-400 font-bold">Clause 8.4(b) Proof:</span> &ldquo;Baseline (8.2d) + Margin (4.0d) = Threshold (12.2d). Recorded 14.0d &gt; 12.2d.&rdquo;
+          <p className="text-slate-700 leading-relaxed">
+            Unstructured legal PDFs (e.g. FIDIC Red Book Sub-Clause 8.4b) are parsed into precise contractual variables:
+          </p>
+
+          <div className="p-3 rounded-lg bg-slate-900 font-mono text-[11px] text-slate-100 space-y-1">
+            <div className="text-amber-400 font-bold">Clause 8.4(b) Structure:</div>
+            <div>• Historical Baseline = 8.2 days</div>
+            <div>• Contractual Margin = 4.0 days</div>
+            <div className="text-emerald-400">• Entitlement Threshold = 8.2 + 4.0 = 12.2 days</div>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            <div className="p-3 rounded-lg bg-slate-50 border border-slate-200 space-y-1">
-              <span className="font-bold text-slate-900 block">Why 6.0 Eligible Days?</span>
-              <p className="text-slate-700 font-mono text-[11px]">
-                14.0 Actual Adverse Days - 8.0 Scheduled Baseline Allowance = <strong>6.0 Critical Path Days</strong> (Substructure Concreting CP-1042).
-              </p>
+          <div className="p-3 rounded-lg bg-slate-50 border border-slate-200 text-slate-700">
+            <strong>Human Verification Step:</strong> Extracted parameters must be verified by the Contracts Manager before activating automated surveillance.
+          </div>
+        </div>
+      )
+    },
+    {
+      id: 'step-3-prove',
+      title: '3. Prove: Contemporary Evidence Matrix',
+      subtitle: 'Substantiating delays with signed site reports and critical path schedules',
+      tag: 'Step 03 · Prove',
+      content: (
+        <div className="space-y-3.5 text-xs">
+          <p className="text-slate-700">
+            A claim is only as strong as its contemporary records. EntitlementIQ correlates evidence across silos:
+          </p>
+
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 text-center">
+            <div className="p-2.5 rounded-lg bg-slate-50 border border-slate-200">
+              <span className="font-bold text-slate-900 block">AWS Telemetry</span>
+              <span className="text-[10px] text-slate-500 font-mono">14 rain days logged</span>
             </div>
-            <div className="p-3 rounded-lg bg-amber-50 border border-amber-200 space-y-1">
-              <span className="font-bold text-amber-900 block">Why ₹4.70 Lakh?</span>
-              <p className="text-slate-700 font-mono text-[11px]">
-                Overhead (₹50k) + Plant (₹20k) + Labor (₹8.3k) = ₹78,333.33/day.
-                <br />
-                <strong>6 days × ₹78,333.33/day = ₹4,69,999.98 (₹4.70L)</strong>.
-              </p>
+            <div className="p-2.5 rounded-lg bg-slate-50 border border-slate-200">
+              <span className="font-bold text-slate-900 block">DPR #218 Signed</span>
+              <span className="text-[10px] text-slate-500 font-mono">Work stoppage recorded</span>
+            </div>
+            <div className="p-2.5 rounded-lg bg-slate-50 border border-slate-200">
+              <span className="font-bold text-slate-900 block">Primavera P6 Analysis</span>
+              <span className="text-[10px] text-slate-500 font-mono">CP-1042 on critical path</span>
             </div>
           </div>
 
           <div className="p-2.5 bg-emerald-50 border border-emerald-200 rounded text-emerald-950 font-semibold text-[11px] flex items-center gap-1.5">
             <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
-            <span>Core Principle: Pure deterministic Python arithmetic handles all numerical evaluations.</span>
+            <span>Evidence Completeness Score: 8/10 contemporarily verified before PM review.</span>
           </div>
         </div>
       )
     },
     {
-      id: 'section-4',
-      title: 'Legal Defensibility & Human Governance',
-      subtitle: 'Surfacing potential recoverable exposure while preserving human authority',
-      tag: 'Governance & Compliance',
+      id: 'step-4-quantify',
+      title: '4. Quantify: Deterministic Mathematical Derivation',
+      subtitle: 'Pure Python arithmetic calculates prolongation costs with zero hallucinations',
+      tag: 'Step 04 · Quantify',
       content: (
         <div className="space-y-3 text-xs">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            <div className="p-3 rounded-lg bg-slate-50 border border-slate-200 space-y-1.5">
-              <span className="font-bold text-slate-900 uppercase tracking-wider text-[10px] block">
-                System Boundary & Constraints
-              </span>
-              <ul className="list-disc list-inside space-y-0.5 text-slate-700 text-[11px]">
-                <li>Identifies potential recoverable exposure</li>
-                <li>Never makes binding legal determinations</li>
-                <li>Generates draft notices for PM authorization</li>
-              </ul>
+            <div className="p-3 rounded-lg bg-slate-50 border border-slate-200 space-y-1">
+              <span className="font-bold text-slate-900 block">Delay Duration Derivation:</span>
+              <p className="text-slate-700 font-mono text-[11px]">
+                14.0 Actual Adverse Days - 8.0 Scheduled Baseline = <strong>6.0 Critical Path Days</strong>.
+              </p>
             </div>
-            <div className="p-3 rounded-lg bg-emerald-50 border border-emerald-200 space-y-1.5">
-              <span className="font-bold text-emerald-950 uppercase tracking-wider text-[10px] block">
-                Enterprise Value Delivered
+            <div className="p-3 rounded-lg bg-amber-50 border border-amber-200 space-y-1">
+              <span className="font-bold text-amber-900 block">Cost Calculation Breakdown:</span>
+              <p className="text-slate-700 font-mono text-[11px]">
+                Daily Burn: ₹50k (Overhead) + ₹20k (Plant) + ₹8.3k (Labor) = ₹78,333.33/d.
+                <br />
+                <strong>6 days × ₹78,333.33 = ₹4,69,999.98 (₹4.70L)</strong>.
+              </p>
+            </div>
+          </div>
+
+          <div className="p-2.5 rounded-lg bg-slate-900 text-white font-mono text-[11px] text-center">
+            Every day count and rupee has an inspectable arithmetic trace.
+          </div>
+        </div>
+      )
+    },
+    {
+      id: 'step-5-track',
+      title: '5. Track: Statutory Notice Clock Monitor',
+      subtitle: 'Preventing contractual forfeiture under standard 28-day notice clauses',
+      tag: 'Step 05 · Track',
+      content: (
+        <div className="space-y-3.5 text-xs">
+          <div className="p-3.5 rounded-xl bg-rose-50 border border-rose-200 text-rose-950 flex items-center justify-between">
+            <div>
+              <div className="font-bold">FIDIC Sub-Clause 20.1 Strict Notice Window</div>
+              <p className="text-[11px] text-rose-800 mt-0.5">
+                Contractors must submit formal notice within 28 days of event occurrence or forfeit 100% of compensation rights.
+              </p>
+            </div>
+            <ClockAlert className="w-8 h-8 text-rose-600 shrink-0 ml-3" />
+          </div>
+
+          <div className="grid grid-cols-3 gap-2 text-center text-xs">
+            <div className="p-2 bg-rose-50 border border-rose-200 rounded text-rose-900 font-bold">
+              Critical (&le; 3 Days)
+            </div>
+            <div className="p-2 bg-amber-50 border border-amber-200 rounded text-amber-900 font-bold">
+              High (&le; 5 Days)
+            </div>
+            <div className="p-2 bg-slate-50 border border-slate-200 rounded text-slate-700 font-bold">
+              Low (&gt; 10 Days)
+            </div>
+          </div>
+        </div>
+      )
+    },
+    {
+      id: 'step-6-review',
+      title: '6. Review: PM Approval & Draft Claim Notice',
+      subtitle: 'Mandatory human approval gate before notice dispatch',
+      tag: 'Step 06 · Review',
+      content: (
+        <div className="space-y-3 text-xs">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div className="p-3 rounded-lg bg-slate-50 border border-slate-200 space-y-1">
+              <span className="font-bold text-slate-900 block text-[11px] uppercase tracking-wider">
+                AI Role (Assistant)
               </span>
-              <ul className="list-disc list-inside space-y-0.5 text-emerald-900 text-[11px]">
-                <li>Immediate notification before 28-day notice forfeiture</li>
-                <li>Deterministic threshold & cost audit trail</li>
-                <li>Mandatory PM review gate before notice issue</li>
-                <li>Automated compilation of contemporary evidence</li>
-              </ul>
+              <p className="text-slate-600 text-[11px]">
+                Detects threshold breaches, compiles contemporary evidence, quantifies daily financial exposure, and drafts standard notice letters.
+              </p>
+            </div>
+            <div className="p-3 rounded-lg bg-emerald-50 border border-emerald-200 space-y-1">
+              <span className="font-bold text-emerald-950 block text-[11px] uppercase tracking-wider">
+                PM Role (Decision Maker)
+              </span>
+              <p className="text-emerald-900 text-[11px]">
+                Reviews calculated delay, adjusts eligible days or rates based on site context, and formally approves notice dispatch.
+              </p>
             </div>
           </div>
 
           <div className="p-2.5 rounded-lg bg-slate-900 text-white font-mono text-[11px] text-center">
             &ldquo;AI Proposes. A Human Approves. The Engineer Determines. Always.&rdquo;
-          </div>
-        </div>
-      )
-    },
-    {
-      id: 'section-5',
-      title: 'System Architecture: Multi-Agent Processing Pipeline',
-      subtitle: 'Clear division of labor between reasoning, data ingestion, and math',
-      tag: 'System Architecture',
-      content: (
-        <div className="space-y-3 text-xs">
-          <p className="text-slate-700">
-            8 distinct modular components work in unison with strict separation of concerns:
-          </p>
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-[11px]">
-            <div className="p-2 bg-slate-50 border border-slate-200 rounded font-semibold">1. Contract Parser (AI)</div>
-            <div className="p-2 bg-slate-50 border border-slate-200 rounded font-semibold">2. Weather Pipeline (Data)</div>
-            <div className="p-2 bg-amber-50 border border-amber-200 rounded font-bold text-amber-900">3. Entitlement Engine (Math)</div>
-            <div className="p-2 bg-slate-50 border border-slate-200 rounded font-semibold">4. Evidence Correlator</div>
-            <div className="p-2 bg-amber-50 border border-amber-200 rounded font-bold text-amber-900">5. Impact Calculator (Cost)</div>
-            <div className="p-2 bg-rose-50 border border-rose-200 rounded font-bold text-rose-900">6. Notice Clock Monitor</div>
-            <div className="p-2 bg-slate-50 border border-slate-200 rounded font-semibold">7. Audit Ledger</div>
-            <div className="p-2 bg-emerald-50 border border-emerald-200 rounded font-bold text-emerald-900">8. PM Approval Gate</div>
           </div>
         </div>
       )

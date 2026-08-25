@@ -72,13 +72,13 @@ The Contractor shall give notice to the Engineer not later than 28 days after th
       <div className="panel-card p-5">
         <div className="flex items-center gap-2 text-xs font-bold text-amber-700 uppercase tracking-wider">
           <Sparkles className="w-4 h-4 text-amber-500" />
-          Contract Intelligence & Rule Extraction
+          AI-Assisted Contract Analysis
         </div>
         <h1 className="text-xl font-bold text-slate-900 mt-1">
-          Extract Weather Entitlement Rules from Contracts
+          Extract Contract Rules & Calculation Baselines
         </h1>
         <p className="text-xs text-slate-600 mt-0.5">
-          Claude AI Contract Agent parses unstructured legal clauses into structured calculation inputs. Human review required before saving.
+          AI parses unstructured contractual clauses into structured calculation parameters. Contracts Manager review is required before saving to active surveillance.
         </p>
       </div>
 
@@ -114,7 +114,7 @@ The Contractor shall give notice to the Engineer not later than 28 days after th
             <div>
               <div className="flex items-center justify-between mb-1">
                 <label className="block text-xs font-bold text-slate-700">
-                  Contract Clause Text / PDF OCR Content:
+                  Contract Clause Text / OCR Content:
                 </label>
                 <span className="text-[11px] text-slate-400 font-mono">Sub-Clause 8.4</span>
               </div>
@@ -133,7 +133,7 @@ The Contractor shall give notice to the Engineer not later than 28 days after th
               className="w-full py-2.5 bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs rounded transition-colors shadow-xs flex items-center justify-center gap-2"
             >
               <Sparkles className="w-4 h-4 text-amber-400" />
-              {isExtracting ? "Extracting Clause Rules with AI..." : "Run AI Clause Extraction"}
+              {isExtracting ? "Analyzing Clause Parameters..." : "Run AI-Assisted Contract Analysis"}
             </button>
           </div>
         </div>

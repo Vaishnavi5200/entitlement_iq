@@ -67,12 +67,12 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
   };
 
   const steps = [
-    { num: '01', title: 'Event', desc: '14 Adverse Rain Days', topic: 'weather_threshold_12_2' as MathTopic },
-    { num: '02', title: 'Entitlement', desc: 'Threshold 8.2 + 4.0 = 12.2d', topic: 'weather_threshold_12_2' as MathTopic },
-    { num: '03', title: 'Evidence', desc: 'AWS + DPR #218 (8/10)', action: 'project' },
-    { num: '04', title: 'Impact', desc: '6d EoT · ₹4.7L Exposure', topic: 'financial_4_7_lakh' as MathTopic },
-    { num: '05', title: 'Deadline', desc: '5 Days Remaining', topic: 'deadline_5_days' as MathTopic, urgent: true },
-    { num: '06', title: 'PM Approval', desc: 'Human Sign-Off & Notice', action: 'project', cta: true },
+    { num: '01', title: '1. Detect', desc: '14 Adverse Rain Days', topic: 'weather_threshold_12_2' as MathTopic },
+    { num: '02', title: '2. Validate', desc: 'Threshold 8.2 + 4.0 = 12.2d', topic: 'weather_threshold_12_2' as MathTopic },
+    { num: '03', title: '3. Prove', desc: 'AWS + DPR #218 (8/10 Evidence)', action: 'project' },
+    { num: '04', title: '4. Quantify', desc: '6d Delay · ₹4.70L Exposure', topic: 'financial_4_7_lakh' as MathTopic },
+    { num: '05', title: '5. Track', desc: '5 Days in Notice Window', topic: 'deadline_5_days' as MathTopic, urgent: true },
+    { num: '06', title: '6. Review', desc: 'Awaiting PM Approval', action: 'project', cta: true },
   ];
 
   return (
@@ -110,7 +110,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
         <div className="flex items-center gap-2">
           <ShieldCheck className="w-4 h-4 text-amber-600 shrink-0" />
           <span>
-            <strong>Legal Governance Principle:</strong> EntitlementIQ identifies potential recoverable exposure under contract thresholds (e.g. FIDIC Sub-Clause 8.4/20.1). AI proposes; formal notice determination and approval remain strictly subject to Project Manager review and Engineer sign-off.
+            <strong>Human Governance Policy:</strong> EntitlementIQ surfaces potential entitlements under contractual thresholds (e.g. FIDIC Sub-Clause 8.4/20.1). AI identifies and quantifies; Project Manager and Engineer approval is strictly required before formal notice issuance.
           </span>
         </div>
         <button
@@ -130,7 +130,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
               Claims Decision Workflow
             </span>
             <span className="text-[11px] text-slate-500 font-mono hidden sm:inline">
-              (Event → Entitlement → Evidence → Impact → Deadline → PM Approval)
+              (Detect → Validate → Prove → Quantify → Track → Review)
             </span>
           </div>
           <span className="text-[11px] font-mono font-semibold text-slate-600 bg-slate-100 px-2 py-0.5 rounded border border-slate-200">
@@ -178,23 +178,9 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
         </div>
       </div>
 
-      {/* Summary Metrics Cards */}
+      {/* Prioritized Summary Metrics Cards */}
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3.5">
-        {/* Active Packages */}
-        <div className="panel-card p-4">
-          <div className="flex items-center justify-between text-slate-500 text-xs font-bold uppercase tracking-wider">
-            <span>Active Packages</span>
-            <FolderKanban className="w-4 h-4 text-slate-400" />
-          </div>
-          <div className="mt-2 text-2xl font-extrabold font-mono text-slate-900">
-            {metrics.active_projects_count}
-          </div>
-          <div className="mt-1 text-[11px] text-slate-500 font-medium">
-            Contracts under surveillance
-          </div>
-        </div>
-
-        {/* Potential Entitlements Detected */}
+        {/* 1. Potential Entitlements */}
         <button
           onClick={() => setActiveMathTopic('weather_threshold_12_2')}
           className="panel-card p-4 border-amber-200 bg-amber-50/20 text-left hover:border-amber-400 transition-all group"
@@ -207,44 +193,44 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
             {metrics.potential_entitlements_count} Identified
           </div>
           <div className="mt-1 text-[11px] text-amber-700 font-medium flex items-center justify-between">
-            <span>Weather thresholds exceeded</span>
+            <span>Thresholds exceeded</span>
             <span className="text-[10px] font-mono underline font-bold">Why? →</span>
           </div>
         </button>
 
-        {/* Claims At Risk */}
-        <div className="panel-card p-4 border-rose-200 bg-rose-50/20">
-          <div className="flex items-center justify-between text-rose-800 text-xs font-bold uppercase tracking-wider">
-            <span>Notice Urgency</span>
-            <AlertTriangle className="w-4 h-4 text-rose-600" />
+        {/* 2. Claims Requiring Review */}
+        <div className="panel-card p-4">
+          <div className="flex items-center justify-between text-slate-500 text-xs font-bold uppercase tracking-wider">
+            <span>Awaiting PM Approval</span>
+            <FolderKanban className="w-4 h-4 text-slate-400" />
           </div>
-          <div className="mt-2 text-2xl font-extrabold font-mono text-rose-900">
-            {metrics.claims_at_risk_count} Urgent
+          <div className="mt-2 text-2xl font-extrabold font-mono text-slate-900">
+            {metrics.priority_claims.filter(c => c.status === 'Needs PM Review').length} Claims
           </div>
-          <div className="mt-1 text-[11px] text-rose-700 font-medium">
-            Notice window closing soon
+          <div className="mt-1 text-[11px] text-slate-500 font-medium">
+            Requires human review
           </div>
         </div>
 
-        {/* Deadlines Within 7 Days */}
+        {/* 3. Deadlines Within 7 Days */}
         <button
           onClick={() => setActiveMathTopic('deadline_5_days')}
-          className="panel-card p-4 border-orange-200 bg-orange-50/20 text-left hover:border-orange-400 transition-all group"
+          className="panel-card p-4 border-rose-200 bg-rose-50/20 text-left hover:border-rose-300 transition-all group"
         >
-          <div className="flex items-center justify-between text-orange-800 text-xs font-bold uppercase tracking-wider">
+          <div className="flex items-center justify-between text-rose-800 text-xs font-bold uppercase tracking-wider">
             <span>Deadlines &lt; 7 Days</span>
-            <ClockAlert className="w-4 h-4 text-orange-600 group-hover:scale-110 transition-transform" />
+            <ClockAlert className="w-4 h-4 text-rose-600 group-hover:scale-110 transition-transform" />
           </div>
-          <div className="mt-2 text-2xl font-extrabold font-mono text-orange-900">
-            {metrics.deadlines_within_7_days_count}
+          <div className="mt-2 text-2xl font-extrabold font-mono text-rose-900">
+            {metrics.deadlines_within_7_days_count} Urgent
           </div>
-          <div className="mt-1 text-[11px] text-orange-700 font-medium flex items-center justify-between">
+          <div className="mt-1 text-[11px] text-rose-700 font-medium flex items-center justify-between">
             <span>Statutory 28d clock</span>
             <span className="text-[10px] font-mono underline font-bold">Trace →</span>
           </div>
         </button>
 
-        {/* Potential Recoverable Exposure Identified */}
+        {/* 4. Estimated Potential Exposure */}
         <button
           onClick={() => setActiveMathTopic('portfolio_19_7_lakh')}
           className="panel-card p-4 col-span-2 md:col-span-1 border-slate-800 bg-[#0B1120] text-white text-left hover:border-amber-400 transition-all group shadow-sm"
@@ -257,10 +243,24 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
             {formatCurrency(metrics.total_recoverable_value)}
           </div>
           <div className="mt-1 text-[11px] text-slate-300 flex items-center justify-between">
-            <span>Across 3 active packages</span>
+            <span>Across 3 eligible packages</span>
             <span className="text-[10px] text-amber-400 font-mono underline">Audit →</span>
           </div>
         </button>
+
+        {/* 5. Active Monitored Packages */}
+        <div className="panel-card p-4">
+          <div className="flex items-center justify-between text-slate-500 text-xs font-bold uppercase tracking-wider">
+            <span>Monitored Packages</span>
+            <FolderKanban className="w-4 h-4 text-slate-400" />
+          </div>
+          <div className="mt-2 text-2xl font-extrabold font-mono text-slate-900">
+            {metrics.active_projects_count}
+          </div>
+          <div className="mt-1 text-[11px] text-slate-500 font-medium">
+            Active EPC contracts
+          </div>
+        </div>
       </div>
 
       {/* Main Grid: Priority Claims (Left) + Entitlement Rule & Deadlines (Right) */}
@@ -457,8 +457,8 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
               </div>
 
               <div className="p-2 bg-emerald-50 border border-emerald-200 rounded text-[11px] text-emerald-900 font-bold flex items-center justify-between">
-                <span>14.0 &gt; 12.2d → Triggered</span>
-                <span>6.0d EoT (₹4.7L)</span>
+                <span>14.0 &gt; 12.2d → Threshold Exceeded</span>
+                <span>6.0d Delay (₹4.70L)</span>
               </div>
             </div>
 
@@ -523,7 +523,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
               className="w-full mt-2 py-2 px-3 bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-lg text-xs font-bold text-slate-700 flex items-center justify-center gap-1.5 transition-colors"
             >
               <Sparkles className="w-3.5 h-3.5 text-amber-500" />
-              Parse Contract Clause
+              AI-Assisted Contract Analysis
             </button>
           </div>
         </div>

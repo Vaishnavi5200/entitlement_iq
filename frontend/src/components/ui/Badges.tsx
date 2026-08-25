@@ -35,40 +35,40 @@ export const RiskBadge: React.FC<{ level: string }> = ({ level }) => {
 };
 
 export const StatusBadge: React.FC<{ status: string }> = ({ status }) => {
-  if (status === 'Needs PM Review') {
+  if (status === 'Needs PM Review' || status === 'Awaiting PM Approval') {
     return (
-      <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded text-xs font-bold bg-amber-500 text-white tracking-wide uppercase shadow-xs">
-        <Clock className="w-3 h-3" />
-        Needs PM Review
+      <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-xs font-semibold bg-amber-50 text-amber-800 border border-amber-200">
+        <Clock className="w-3 h-3 text-amber-600" />
+        Awaiting PM Approval
       </span>
     );
   }
   if (status === 'Approved') {
     return (
-      <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded text-xs font-bold bg-emerald-600 text-white tracking-wide uppercase">
-        <CheckCircle2 className="w-3 h-3" />
+      <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-xs font-semibold bg-emerald-50 text-emerald-800 border border-emerald-200">
+        <CheckCircle2 className="w-3 h-3 text-emerald-600" />
         Approved
       </span>
     );
   }
-  if (status === 'Claim Generated') {
+  if (status === 'Claim Generated' || status === 'Claim Issued') {
     return (
-      <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded text-xs font-bold bg-indigo-700 text-white tracking-wide uppercase">
-        <FileText className="w-3 h-3" />
-        Claim Issued
+      <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-xs font-semibold bg-slate-900 text-white">
+        <FileText className="w-3 h-3 text-amber-400" />
+        Notice Dispatched
       </span>
     );
   }
   if (status === 'Rejected') {
     return (
-      <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded text-xs font-bold bg-slate-700 text-white tracking-wide uppercase">
-        <XCircle className="w-3 h-3" />
+      <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-xs font-semibold bg-slate-100 text-slate-700 border border-slate-200">
+        <XCircle className="w-3 h-3 text-slate-500" />
         Rejected
       </span>
     );
   }
   return (
-    <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded text-xs font-medium bg-slate-100 text-slate-800 border border-slate-200">
+    <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-xs font-medium bg-slate-100 text-slate-700 border border-slate-200">
       {status}
     </span>
   );

@@ -38,13 +38,13 @@ export const ClaimsView: React.FC<ClaimsViewProps> = ({ onSelectProjectDetail })
           <div>
             <div className="flex items-center gap-2 text-xs font-bold text-amber-700 uppercase tracking-wider">
               <FileText className="w-4 h-4 text-amber-600" />
-              Claims & Formal Legal Notices (FIDIC Clause 20.1)
+              Contract Notice Dispatch (FIDIC Clause 20.1)
             </div>
             <h1 className="text-xl font-bold text-slate-900 mt-1">
-              Generated Contractor Claim Notices
+              Draft Contractor Claim Notices
             </h1>
             <p className="text-xs text-slate-500 mt-0.5">
-              Official legal notices with contemporary record citations formatted for dispatch to the Employer / Engineer.
+              Substantiated draft legal notices with contemporary record citations, prepared for Project Manager review and formal dispatch.
             </p>
           </div>
           <button

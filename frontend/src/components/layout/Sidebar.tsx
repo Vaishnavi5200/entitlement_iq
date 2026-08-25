@@ -38,8 +38,8 @@ export const Sidebar: React.FC<SidebarProps> = ({
     { id: 'entitlements', label: 'Weather Entitlements', icon: FileCheck2, badge: '3 Identified' },
     { id: 'evidence', label: 'Evidence Matrix', icon: Database, badge: '8/10' },
     { id: 'deadlines', label: 'Notice Deadlines', icon: ClockAlert, badge: '2 Urgent' },
-    { id: 'claims', label: 'Claims & Notices', icon: FileText, badge: null },
-    { id: 'contract-upload', label: 'Contract Clause Parser', icon: FileCode, badge: 'AI Assisted' },
+    { id: 'claims', label: 'Draft Claim Notices', icon: FileText, badge: null },
+    { id: 'contract-upload', label: 'AI Contract Analysis', icon: FileCode, badge: 'Assisted' },
     { id: 'audit-log', label: 'Audit Ledger', icon: History, badge: null },
   ];
 
@@ -54,10 +54,10 @@ export const Sidebar: React.FC<SidebarProps> = ({
       <div className="mx-3 mt-3 p-3 rounded-xl bg-slate-900/90 border border-slate-800 text-[11px] text-slate-300">
         <div className="font-bold text-slate-200 flex items-center gap-1.5 mb-1">
           <ShieldCheck className="w-3.5 h-3.5 text-amber-400" />
-          <span>Claims Decision Workflow</span>
+          <span>Claims Intelligence Workflow</span>
         </div>
         <div className="text-[10px] text-amber-400 font-mono tracking-tight font-semibold">
-          Event → Entitlement → Evidence → Impact → Deadline → PM Approval
+          Detect → Validate → Prove → Quantify → Track → Review
         </div>
       </div>
 
