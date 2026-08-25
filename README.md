@@ -1,117 +1,203 @@
-# EntitlementIQ — Construction Claims Sentinel
+# EntitlementIQ — Construction Claims Intelligence
 
 <div align="center">
 
 ![EntitlementIQ Logo](frontend/public/logo.svg)
 
-### Detecting Recoverable Construction Claims Before the Contractual Deadline Closes
-**byteBuilt 1.0 Hackathon · Problem Statement PS #13 · Change Order Claims Desk**
+**Detecting recoverable construction claims before the contractual deadline closes.**
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2FVaishnavi5200%2FEntitlementIQ)
-[![Live Demo](https://img.shields.io/badge/Live_Demo-HTTPS_Tunnel-amber.svg)](https://0a07a1e75a2b59.lhr.life)
+[![Live Demo](https://img.shields.io/badge/Live_Demo-Visit-amber.svg)](https://0a07a1e75a2b59.lhr.life)
 [![GitHub Repository](https://img.shields.io/badge/GitHub-Vaishnavi5200%2FEntitlementIQ-blue.svg)](https://github.com/Vaishnavi5200/EntitlementIQ)
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2FVaishnavi5200%2FEntitlementIQ)
 
 </div>
 
 ---
 
-## ⚡ 1-Click Vercel Deployment Link
+## Problem
 
-Click the button below to immediately deploy your own instance of EntitlementIQ on Vercel with zero configuration:
+Construction projects generate fragmented data across site reports, RFIs, schedules, weather logs, and contracts. When a delay event occurs:
 
-👉 **[Deploy on Vercel (Direct Link)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2FVaishnavi5200%2FEntitlementIQ)**
+- Evidence is scattered and not correlated quickly enough.
+- The **28-day statutory notice clock** (FIDIC Sub-Clause 20.1) keeps running from the moment of awareness.
+- If formal notice is not served in time, the contractor **forfeits all rights to delay compensation** — regardless of how valid the underlying claim is.
 
----
-
-## 🎯 Executive Overview (PS #13)
-
-Construction projects generate floods of fragmented data across site reports, RFIs, P6 schedules, AWS weather logs, photos, and executed contracts. When a delay happens:
-1. Nobody correlates the evidence fast enough.
-2. The **strict 28-day statutory notice clock** (FIDIC Sub-Clause 20.1) keeps running.
-3. The contractor **forfeits 100% of delay compensation** if notice is not served in time.
-
-### Core Motto
-> *"Detect the delay. Prove the entitlement. Beat the deadline."*
+Most projects miss recoverable entitlements not because the claim doesn't exist, but because no one connected the evidence fast enough.
 
 ---
 
-## 🔁 The Core 6-Step Loop
+## Solution
+
+EntitlementIQ is a construction claims intelligence platform that automates the detection, calculation, and documentation of weather-related delay entitlements under FIDIC-style contracts.
+
+It combines an **AI contract parsing agent** (Claude) with a **deterministic entitlement engine** to evaluate threshold breaches, compute financial exposure, track statutory deadlines, and generate draft claim notices — all with a fully transparent audit trail.
+
+> *"AI proposes. A human approves. The engineer determines. Always."*
+
+---
+
+## Key Features
+
+- **Contract Upload & AI Parsing** — Upload a contract clause (PDF or text); Claude extracts the entitlement rule (baseline days, margin, threshold, notice window) as structured parameters. Falls back to a high-precision regex parser when no API key is configured.
+- **Deterministic Entitlement Engine** — Pure mathematical evaluation of whether actual adverse weather days exceed the contractual threshold, with every step traceable.
+- **Weather Data Ingestion** — Daily site weather observations (rainfall mm, wind km/h) mapped against the IMD 10-year historical baseline.
+- **Financial Impact Calculation** — Transparent cost breakdown across site overheads, plant & equipment standby, and labour — multiplied by eligible delay days.
+- **Deadline Sentinel** — Countdown tracker for the 28-day FIDIC Sub-Clause 20.1 notice window, with risk-level classification (Low / Medium / High / Critical).
+- **Evidence Correlation** — Links daily site progress reports, weather records, and schedule data to the detected event.
+- **Claim Notice Generation** — Produces a draft formal notice of claim (FIDIC Sub-Clause 8.4(b) / 20.1 compliant) ready for human review.
+- **Human Approval Gate** — No claim is dispatched without explicit project manager sign-off.
+- **Immutable Audit Log** — Every calculation step, agent action, and approval decision is logged for legal defensibility.
+
+---
+
+## How It Works
 
 ```
-[01. Event]       14 Adverse Rainy Days Recorded (Station AWS-NCR-042)
+[01. Event]       Adverse weather days recorded against project site
       ↓
-[02. Entitlement] Contract Clause 8.4(b): Baseline (8.2d) + Margin (4.0d) = 12.2d Threshold
-                  14.0 > 12.2 → Potential Entitlement Detected
+[02. Entitlement] Contract clause parsed → threshold derived (baseline + margin)
+                  Actual days vs. threshold → entitlement triggered or not
       ↓
-[03. Evidence]    Contemporary Records Collated: AWS Log + DPR #218 + P6 TIA (8/10 Score)
+[03. Evidence]    Contemporary records correlated: weather logs, DPRs, schedule
       ↓
-[04. Impact]      6.0 Eligible Days EoT × ₹78,333.33/day = ₹4.70 Lakh Estimated Exposure
+[04. Impact]      Eligible EoT days × combined daily prolongation rate = financial exposure
       ↓
-[05. Deadline]    Statutory 28-Day Clock from 10 Aug Detection → 5 Days Left (Expires 07 Sep)
+[05. Deadline]    28-day notice clock tracked from detection date → risk level assigned
       ↓
-[06. Action]      PM Human Review Gate (Approve / Edit / Reject) → Formal Claim Notice Issued
+[06. Action]      Human review gate → draft claim notice generated and dispatched
 ```
 
 ---
 
-## 🧮 "Where Did This Number Come From?" (Deterministic Math)
+## Architecture
 
-Every single number in EntitlementIQ has a visible mathematical proof:
-
-### 1. How ₹4.70 Lakh is Derived
-- **Daily Site Overheads:** ₹50,000.00 / day
-- **Plant & Equipment Standby:** ₹20,000.00 / day
-- **Indirect Core Labour:** ₹8,333.33 / day
-- **Combined Daily Prolongation Rate ($R$):** ₹78,333.33 / day
-- **Eligible Critical Path Delay ($D_{EoT}$):** 14.0 Actual Days - 8.0 Scheduled Baseline = 6.0 Days
-- **Total Prolongation Exposure:** $6.0 \times ₹78,333.33 = \mathbf{₹4,69,999.98 \approx ₹4.70\text{ Lakh}}$
-
-### 2. How 14.0 > 12.2 Days is Derived
-- **10-Year Historical Climatological Baseline:** 8.2 Days
-- **Negotiated Contract Buffer Margin (Clause 8.4b):** +4.0 Days
-- **Contractual Threshold:** $8.2 + 4.0 = \mathbf{12.2\text{ Days}}$
-- **Actual Weather Observations:** $\mathbf{14.0\text{ Days}}$ ($\Delta = +1.8\text{ Days}$ threshold excess)
+| Component | Role |
+|---|---|
+| **Contract Agent** (Claude / regex fallback) | Reads contract clause text → extracts structured entitlement parameters |
+| **Weather Service** | Ingests daily site observations; retrieves IMD historical baseline |
+| **Entitlement Engine** (Deterministic Python) | Evaluates threshold, computes eligible days, validates entitlement trigger |
+| **Impact Calculator** (Deterministic) | Breaks down prolongation costs across overhead, equipment, and labour |
+| **Claim Generator** | Produces FIDIC-compliant draft formal notice document |
+| **Deadline Sentinel** | Tracks 28-day countdown and classifies risk level |
+| **Audit Logger** | Logs all steps to an immutable ledger |
+| **Human Gate** | PM approval required before claim is finalised or dispatched |
 
 ---
 
-## 🛡️ Legal Defensibility & Non-Overclaiming
+## AI + Deterministic Engine
 
-- ❌ **We do NOT claim:** *"Claim guaranteed"* or *"AI makes legal determinations"*
-- ✅ **We DO provide:** *"Potential recoverable exposure identified to safeguard contractors from statutory notice forfeiture under FIDIC Sub-Clause 20.1"*
-- **Governance Principle:** *"AI Proposes. A Human Approves. Engineer Determines. ALWAYS."*
+EntitlementIQ uses a hybrid approach:
 
----
+**AI (Claude 3.5 Sonnet)** handles the unstructured part — reading a contract clause in plain language and extracting the entitlement rule as structured parameters (baseline days, margin, threshold, notice window).
 
-## 🏗️ Architecture: Multi-Agent Division of Labor
+**Deterministic Python** handles everything numerical. Once the parameters are extracted, all threshold comparisons, eligible day derivations, financial calculations, and deadline countdowns are pure arithmetic — no inference, no hallucination risk.
 
-1. **Contract Agent (AI / Claude):** Reads GCC PDF/OCR → extracts structured threshold parameters.
-2. **Weather Agent (Data Pipeline):** Ingests IMD / AWS station observations.
-3. **Entitlement Engine (Deterministic Python):** Pure mathematical evaluation ($14 > 12.2 = \text{TRUE}$).
-4. **Evidence Agent (Correlator):** Matches daily reports & P6 critical path schedules.
-5. **Impact Calculator (Deterministic Cost Model):** Multiplies daily burn rate by delay days.
-6. **Deadline Sentinel (Temporal Clock):** Tracks 28-day notice countdown to avoid forfeiture.
-7. **Validator (System Auditor):** Verifies integrity and logs to immutable ledger.
-8. **Human Gate (PM Rajesh Sharma):** Human approval required before claim dispatch.
+If no Anthropic API key is configured, the platform falls back to a high-precision regex-based parser that achieves the same structured extraction from standard FIDIC clause language.
+
+**Legal guardrail:** EntitlementIQ surfaces potential recoverable exposure and generates draft notices. It does not make legal determinations. All outputs pass through a mandatory human review gate before any action is taken.
 
 ---
 
-## 💻 Local Development Setup
+## Tech Stack
+
+**Frontend**
+- React 19 + TypeScript
+- Vite 8
+- Tailwind CSS 3
+- Lucide React (icons)
+
+**Backend**
+- Python 3.14
+- FastAPI + Uvicorn
+- SQLAlchemy 2 + SQLite
+- Pydantic v2 + pydantic-settings
+- httpx (Claude API calls)
+- uv (package & build tool)
+
+**AI**
+- Anthropic Claude 3.5 Sonnet (optional; regex fallback included)
+
+**Deployment**
+- Vercel (frontend)
+- Backend served via uv
+
+---
+
+## Project Structure
+
+```
+EntitlementIQ/
+├── frontend/                  # React + TypeScript UI
+│   ├── src/
+│   │   ├── views/             # Page-level views
+│   │   │   ├── DashboardView.tsx
+│   │   │   ├── ProjectDetailView.tsx
+│   │   │   ├── ContractUploadView.tsx
+│   │   │   ├── ClaimsView.tsx
+│   │   │   ├── DeadlinesView.tsx
+│   │   │   ├── EvidenceView.tsx
+│   │   │   ├── AuditLogView.tsx
+│   │   │   └── ProjectsListView.tsx
+│   │   ├── components/        # Shared UI components
+│   │   └── api/               # API client
+│   └── package.json
+├── backend/                   # FastAPI backend
+│   └── app/
+│       ├── main.py            # App entry point, CORS, routing
+│       ├── config.py          # Settings (env vars, DB URL, API key)
+│       ├── database.py        # SQLAlchemy setup
+│       ├── models/            # ORM models
+│       ├── schemas/           # Pydantic request/response schemas
+│       ├── repositories/      # Database access layer
+│       ├── services/
+│       │   ├── contract_agent.py    # Claude + regex contract parser
+│       │   ├── calculator.py        # Deterministic entitlement engine
+│       │   ├── weather_service.py   # Weather data + historical baseline
+│       │   └── claim_generator.py   # Formal notice document generator
+│       ├── api/routes.py      # All API endpoints
+│       └── seed/              # Demo seed data
+└── vercel.json
+```
+
+---
+
+## Local Setup
+
+**Prerequisites:** Node.js, Python 3.14+, [uv](https://github.com/astral-sh/uv)
 
 ```bash
-# 1. Clone repository
-git clone https://github.com/Vaishnavi5200/EntitlementIQ.git
-cd EntitlementIQ
+# 1. Clone the repository
+git clone https://github.com/Vaishnavi5200/entitlement_iq.git
+cd entitlement_iq
 
-# 2. Start Frontend
+# 2. Start the frontend
 cd frontend
 npm install
 npm run dev
 
-# 3. Start Backend
-cd ../backend
+# 3. Start the backend (new terminal)
+cd backend
 uv run entitlementiq-backend
 ```
 
-- **Frontend:** `http://localhost:5173`
-- **Backend API:** `http://localhost:8000`
-- **Swagger Docs:** `http://localhost:8000/docs`
+| Service | URL |
+|---|---|
+| Frontend | http://localhost:5173 |
+| Backend API | http://localhost:8000 |
+| Swagger Docs | http://localhost:8000/docs |
+
+**Optional:** Set `ANTHROPIC_API_KEY` in `backend/.env` to enable live Claude contract parsing. Without it, the built-in regex parser is used automatically.
+
+---
+
+## Disclaimer
+
+EntitlementIQ surfaces potential recoverable delay entitlements and generates draft formal notices to assist project teams. It does not constitute legal advice and does not make binding contractual or legal determinations. All outputs must be reviewed, verified, and approved by a qualified contract administrator or legal professional before submission.
+
+---
+
+## Project
+
+Built by [Vaishnavi Dwivedi](https://github.com/Vaishnavi5200).
+
+GitHub: [github.com/Vaishnavi5200/EntitlementIQ](https://github.com/Vaishnavi5200/EntitlementIQ)

@@ -1,4 +1,16 @@
-const API_BASE = "http://127.0.0.1:8000/api";
+const API_BASE = (import.meta.env.VITE_API_BASE as string | undefined) ?? "http://127.0.0.1:8000/api";
+
+/** Wraps fetch with a timeout so the app fails fast when the backend is unreachable. */
+async function fetchWithTimeout(input: RequestInfo | URL, init?: RequestInit, timeoutMs = 5000): Promise<Response> {
+  const controller = new AbortController();
+  const id = setTimeout(() => controller.abort(), timeoutMs);
+  try {
+    return await fetch(input, { ...init, signal: controller.signal });
+  } finally {
+    clearTimeout(id);
+  }
+}
+
 
 export interface Project {
   id: number;
@@ -175,25 +187,25 @@ export interface ClaimNotice {
 
 export const api = {
   async getDashboardMetrics(): Promise<DashboardMetrics> {
-    const res = await fetch(`${API_BASE}/dashboard/metrics`);
+    const res = await fetchWithTimeout(`${API_BASE}/dashboard/metrics`);
     if (!res.ok) throw new Error("Failed to fetch dashboard metrics");
     return res.json();
   },
 
   async getProjects(): Promise<Project[]> {
-    const res = await fetch(`${API_BASE}/projects`);
+    const res = await fetchWithTimeout(`${API_BASE}/projects`);
     if (!res.ok) throw new Error("Failed to fetch projects");
     return res.json();
   },
 
   async getProjectDetails(id: number): Promise<{ project: Project; contracts: Contract[]; entitlements: Entitlement[] }> {
-    const res = await fetch(`${API_BASE}/projects/${id}`);
+    const res = await fetchWithTimeout(`${API_BASE}/projects/${id}`);
     if (!res.ok) throw new Error("Failed to fetch project details");
     return res.json();
   },
 
   async getEntitlement(id: number): Promise<Entitlement> {
-    const res = await fetch(`${API_BASE}/entitlements/${id}`);
+    const res = await fetchWithTimeout(`${API_BASE}/entitlements/${id}`);
     if (!res.ok) throw new Error("Failed to fetch entitlement");
     return res.json();
   },
@@ -210,7 +222,7 @@ export const api = {
     if (params?.custom_actual_days !== undefined) query.append('custom_actual_days', String(params.custom_actual_days));
     if (params?.custom_formula_type !== undefined) query.append('custom_formula_type', params.custom_formula_type);
 
-    const res = await fetch(`${API_BASE}/entitlements/${id}/recalculate?${query.toString()}`, {
+    const res = await fetchWithTimeout(`${API_BASE}/entitlements/${id}/recalculate?${query.toString()}`, {
       method: "POST"
     });
     if (!res.ok) throw new Error("Failed to recalculate entitlement");
@@ -225,7 +237,7 @@ export const api = {
     reviewer_role?: string;
     rationale: string;
   }): Promise<any> {
-    const res = await fetch(`${API_BASE}/entitlements/${id}/review`, {
+    const res = await fetchWithTimeout(`${API_BASE}/entitlements/${id}/review`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(data)
@@ -235,7 +247,7 @@ export const api = {
   },
 
   async getClaimNotice(id: number): Promise<ClaimNotice> {
-    const res = await fetch(`${API_BASE}/entitlements/${id}/claim-notice`);
+    const res = await fetchWithTimeout(`${API_BASE}/entitlements/${id}/claim-notice`);
     if (!res.ok) throw new Error("Failed to fetch claim notice");
     return res.json();
   },
@@ -246,7 +258,7 @@ export const api = {
     form_type?: string;
     contract_text: string;
   }): Promise<any> {
-    const res = await fetch(`${API_BASE}/contracts/parse`, {
+    const res = await fetchWithTimeout(`${API_BASE}/contracts/parse`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(data)
@@ -256,7 +268,7 @@ export const api = {
   },
 
   async updateContractRule(ruleId: number, data: Partial<ContractRule>): Promise<ContractRule> {
-    const res = await fetch(`${API_BASE}/contract-rules/${ruleId}`, {
+    const res = await fetchWithTimeout(`${API_BASE}/contract-rules/${ruleId}`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(data)
@@ -267,7 +279,7 @@ export const api = {
 
   async getAuditLogs(projectId?: number): Promise<AuditLog[]> {
     const url = projectId ? `${API_BASE}/audit-logs?project_id=${projectId}` : `${API_BASE}/audit-logs`;
-    const res = await fetch(url);
+    const res = await fetchWithTimeout(url);
     if (!res.ok) throw new Error("Failed to fetch audit logs");
     return res.json();
   },
@@ -279,7 +291,7 @@ export const api = {
     observations: WeatherObservation[];
     total_adverse_days_recorded: number;
   }> {
-    const res = await fetch(`${API_BASE}/weather/${projectId}`);
+    const res = await fetchWithTimeout(`${API_BASE}/weather/${projectId}`);
     if (!res.ok) throw new Error("Failed to fetch weather data");
     return res.json();
   }

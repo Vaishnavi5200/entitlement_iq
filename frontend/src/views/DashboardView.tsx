@@ -25,28 +25,61 @@ import { MathTraceModal, MathTopic } from '../components/ui/MathTraceModal';
 interface DashboardViewProps {
   metrics: DashboardMetrics | null;
   loading: boolean;
+  error?: boolean;
   onSelectClaim: (projectId: number, entitlementId: number) => void;
   onNavigateToUpload: () => void;
   onOpenPitchGuide?: () => void;
+  onRetry?: () => void;
   currencyMode?: 'INR' | 'USD';
 }
 
 export const DashboardView: React.FC<DashboardViewProps> = ({
   metrics,
   loading,
+  error,
   onSelectClaim,
   onNavigateToUpload,
   onOpenPitchGuide,
+  onRetry,
   currencyMode = 'INR'
 }) => {
   const [activeMathTopic, setActiveMathTopic] = useState<MathTopic | null>(null);
 
-  if (loading || !metrics) {
+  if (loading) {
     return (
       <div className="p-12 flex items-center justify-center min-h-[450px]">
         <div className="flex flex-col items-center gap-3 text-slate-500 text-sm">
           <div className="w-8 h-8 border-3 border-amber-500 border-t-transparent rounded-full animate-spin"></div>
           <span className="font-semibold">Loading Construction Claims Intelligence Dashboard...</span>
+        </div>
+      </div>
+    );
+  }
+
+  if (!metrics) {
+    return (
+      <div className="p-12 flex items-center justify-center min-h-[450px]">
+        <div className="flex flex-col items-center gap-4 text-slate-500 text-sm max-w-sm text-center">
+          <div className="w-12 h-12 rounded-full bg-red-50 flex items-center justify-center">
+            <AlertTriangle className="w-6 h-6 text-red-400" />
+          </div>
+          <div>
+            <p className="font-semibold text-slate-700 text-base mb-1">Backend Offline</p>
+            <p className="text-slate-500 text-xs leading-relaxed">
+              The app could not connect to the backend API. Run the backend locally
+              (<code className="bg-slate-100 px-1 rounded">uv run entitlementiq-backend</code>)
+              or set a <code className="bg-slate-100 px-1 rounded">VITE_API_BASE</code> environment
+              variable in Vercel pointing to your deployed backend.
+            </p>
+          </div>
+          {onRetry && (
+            <button
+              onClick={onRetry}
+              className="mt-1 px-4 py-2 bg-amber-500 text-white text-xs font-semibold rounded-lg hover:bg-amber-600 transition-colors"
+            >
+              Retry
+            </button>
+          )}
         </div>
       </div>
     );

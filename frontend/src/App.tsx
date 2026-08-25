@@ -108,12 +108,13 @@ export const App: React.FC = () => {
         {/* View Container */}
         <main className="flex-1 overflow-y-auto">
           {activeTab === 'dashboard' && (
-            <DashboardView
+          <DashboardView
               metrics={metrics}
               loading={loading}
               onSelectClaim={handleSelectClaim}
               onNavigateToUpload={() => setActiveTab('contract-upload')}
               onOpenPitchGuide={() => setIsPitchGuideOpen(true)}
+              onRetry={loadInitialData}
               currencyMode={currencyMode}
             />
           )}
