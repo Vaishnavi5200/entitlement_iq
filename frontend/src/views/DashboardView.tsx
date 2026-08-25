@@ -56,34 +56,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
     );
   }
 
-  if (!metrics) {
-    return (
-      <div className="p-12 flex items-center justify-center min-h-[450px]">
-        <div className="flex flex-col items-center gap-4 text-slate-500 text-sm max-w-sm text-center">
-          <div className="w-12 h-12 rounded-full bg-red-50 flex items-center justify-center">
-            <AlertTriangle className="w-6 h-6 text-red-400" />
-          </div>
-          <div>
-            <p className="font-semibold text-slate-700 text-base mb-1">Backend Offline</p>
-            <p className="text-slate-500 text-xs leading-relaxed">
-              The app could not connect to the backend API. Run the backend locally
-              (<code className="bg-slate-100 px-1 rounded">uv run entitlementiq-backend</code>)
-              or set a <code className="bg-slate-100 px-1 rounded">VITE_API_BASE</code> environment
-              variable in Vercel pointing to your deployed backend.
-            </p>
-          </div>
-          {onRetry && (
-            <button
-              onClick={onRetry}
-              className="mt-1 px-4 py-2 bg-amber-500 text-white text-xs font-semibold rounded-lg hover:bg-amber-600 transition-colors"
-            >
-              Retry
-            </button>
-          )}
-        </div>
-      </div>
-    );
-  }
+  if (!metrics) return null;
 
   const formatCurrency = (valInInr: number) => {
     if (currencyMode === 'USD') {

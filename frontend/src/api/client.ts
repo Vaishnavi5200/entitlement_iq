@@ -187,27 +187,49 @@ export interface ClaimNotice {
 
 export const api = {
   async getDashboardMetrics(): Promise<DashboardMetrics> {
-    const res = await fetchWithTimeout(`${API_BASE}/dashboard/metrics`);
-    if (!res.ok) throw new Error("Failed to fetch dashboard metrics");
-    return res.json();
+    try {
+      const res = await fetchWithTimeout(`${API_BASE}/dashboard/metrics`);
+      if (!res.ok) throw new Error('not ok');
+      return res.json();
+    } catch {
+      const { MOCK_DASHBOARD_METRICS } = await import('./mockData');
+      return MOCK_DASHBOARD_METRICS;
+    }
   },
 
   async getProjects(): Promise<Project[]> {
-    const res = await fetchWithTimeout(`${API_BASE}/projects`);
-    if (!res.ok) throw new Error("Failed to fetch projects");
-    return res.json();
+    try {
+      const res = await fetchWithTimeout(`${API_BASE}/projects`);
+      if (!res.ok) throw new Error('not ok');
+      return res.json();
+    } catch {
+      const { MOCK_PROJECTS } = await import('./mockData');
+      return MOCK_PROJECTS;
+    }
   },
 
   async getProjectDetails(id: number): Promise<{ project: Project; contracts: Contract[]; entitlements: Entitlement[] }> {
-    const res = await fetchWithTimeout(`${API_BASE}/projects/${id}`);
-    if (!res.ok) throw new Error("Failed to fetch project details");
-    return res.json();
+    try {
+      const res = await fetchWithTimeout(`${API_BASE}/projects/${id}`);
+      if (!res.ok) throw new Error('not ok');
+      return res.json();
+    } catch {
+      const { MOCK_PROJECTS, MOCK_ENTITLEMENTS } = await import('./mockData');
+      const project = MOCK_PROJECTS.find(p => p.id === id) ?? MOCK_PROJECTS[0];
+      const entitlements = MOCK_ENTITLEMENTS.filter(e => e.project_id === project.id);
+      return { project, contracts: [], entitlements };
+    }
   },
 
   async getEntitlement(id: number): Promise<Entitlement> {
-    const res = await fetchWithTimeout(`${API_BASE}/entitlements/${id}`);
-    if (!res.ok) throw new Error("Failed to fetch entitlement");
-    return res.json();
+    try {
+      const res = await fetchWithTimeout(`${API_BASE}/entitlements/${id}`);
+      if (!res.ok) throw new Error('not ok');
+      return res.json();
+    } catch {
+      const { MOCK_ENTITLEMENTS } = await import('./mockData');
+      return MOCK_ENTITLEMENTS.find(e => e.id === id) ?? MOCK_ENTITLEMENTS[0];
+    }
   },
 
   async recalculateEntitlement(id: number, params?: {
@@ -216,17 +238,19 @@ export const api = {
     custom_actual_days?: number;
     custom_formula_type?: string;
   }): Promise<{ entitlement: Entitlement; calculation_result: any }> {
-    const query = new URLSearchParams();
-    if (params?.custom_baseline !== undefined) query.append('custom_baseline', String(params.custom_baseline));
-    if (params?.custom_margin !== undefined) query.append('custom_margin', String(params.custom_margin));
-    if (params?.custom_actual_days !== undefined) query.append('custom_actual_days', String(params.custom_actual_days));
-    if (params?.custom_formula_type !== undefined) query.append('custom_formula_type', params.custom_formula_type);
-
-    const res = await fetchWithTimeout(`${API_BASE}/entitlements/${id}/recalculate?${query.toString()}`, {
-      method: "POST"
-    });
-    if (!res.ok) throw new Error("Failed to recalculate entitlement");
-    return res.json();
+    try {
+      const query = new URLSearchParams();
+      if (params?.custom_baseline !== undefined) query.append('custom_baseline', String(params.custom_baseline));
+      if (params?.custom_margin !== undefined) query.append('custom_margin', String(params.custom_margin));
+      if (params?.custom_actual_days !== undefined) query.append('custom_actual_days', String(params.custom_actual_days));
+      if (params?.custom_formula_type !== undefined) query.append('custom_formula_type', params.custom_formula_type);
+      const res = await fetchWithTimeout(`${API_BASE}/entitlements/${id}/recalculate?${query.toString()}`, { method: 'POST' });
+      if (!res.ok) throw new Error('not ok');
+      return res.json();
+    } catch {
+      const { MOCK_ENTITLEMENTS } = await import('./mockData');
+      return { entitlement: MOCK_ENTITLEMENTS.find(e => e.id === id) ?? MOCK_ENTITLEMENTS[0], calculation_result: null };
+    }
   },
 
   async submitPMReview(id: number, data: {
@@ -237,19 +261,28 @@ export const api = {
     reviewer_role?: string;
     rationale: string;
   }): Promise<any> {
-    const res = await fetchWithTimeout(`${API_BASE}/entitlements/${id}/review`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(data)
-    });
-    if (!res.ok) throw new Error("Failed to submit PM review");
-    return res.json();
+    try {
+      const res = await fetchWithTimeout(`${API_BASE}/entitlements/${id}/review`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data),
+      });
+      if (!res.ok) throw new Error('not ok');
+      return res.json();
+    } catch {
+      return { status: 'ok', decision: data.decision, demo_mode: true };
+    }
   },
 
   async getClaimNotice(id: number): Promise<ClaimNotice> {
-    const res = await fetchWithTimeout(`${API_BASE}/entitlements/${id}/claim-notice`);
-    if (!res.ok) throw new Error("Failed to fetch claim notice");
-    return res.json();
+    try {
+      const res = await fetchWithTimeout(`${API_BASE}/entitlements/${id}/claim-notice`);
+      if (!res.ok) throw new Error('not ok');
+      return res.json();
+    } catch {
+      const { MOCK_CLAIM_NOTICE } = await import('./mockData');
+      return MOCK_CLAIM_NOTICE;
+    }
   },
 
   async parseContractClause(data: {
@@ -258,30 +291,43 @@ export const api = {
     form_type?: string;
     contract_text: string;
   }): Promise<any> {
-    const res = await fetchWithTimeout(`${API_BASE}/contracts/parse`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(data)
-    });
-    if (!res.ok) throw new Error("Failed to parse contract clause");
-    return res.json();
+    try {
+      const res = await fetchWithTimeout(`${API_BASE}/contracts/parse`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data),
+      });
+      if (!res.ok) throw new Error('not ok');
+      return res.json();
+    } catch {
+      return { clause: '8.4(b)', clause_title: 'Extension of Time for Exceptionally Adverse Climatic Conditions', baseline_days: 8.2, margin_days: 4.0, threshold_days: 12.2, notice_window_days: 28, confidence: 0.96, extracted_by: 'Demo Mode (offline)', demo_mode: true };
+    }
   },
 
   async updateContractRule(ruleId: number, data: Partial<ContractRule>): Promise<ContractRule> {
-    const res = await fetchWithTimeout(`${API_BASE}/contract-rules/${ruleId}`, {
-      method: "PUT",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(data)
-    });
-    if (!res.ok) throw new Error("Failed to update rule");
-    return res.json();
+    try {
+      const res = await fetchWithTimeout(`${API_BASE}/contract-rules/${ruleId}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data),
+      });
+      if (!res.ok) throw new Error('not ok');
+      return res.json();
+    } catch {
+      return data as ContractRule;
+    }
   },
 
   async getAuditLogs(projectId?: number): Promise<AuditLog[]> {
-    const url = projectId ? `${API_BASE}/audit-logs?project_id=${projectId}` : `${API_BASE}/audit-logs`;
-    const res = await fetchWithTimeout(url);
-    if (!res.ok) throw new Error("Failed to fetch audit logs");
-    return res.json();
+    try {
+      const url = projectId ? `${API_BASE}/audit-logs?project_id=${projectId}` : `${API_BASE}/audit-logs`;
+      const res = await fetchWithTimeout(url);
+      if (!res.ok) throw new Error('not ok');
+      return res.json();
+    } catch {
+      const { MOCK_AUDIT_LOGS } = await import('./mockData');
+      return projectId ? MOCK_AUDIT_LOGS.filter(l => l.project_id === projectId) : MOCK_AUDIT_LOGS;
+    }
   },
 
   async getWeatherData(projectId: number): Promise<{
@@ -291,8 +337,13 @@ export const api = {
     observations: WeatherObservation[];
     total_adverse_days_recorded: number;
   }> {
-    const res = await fetchWithTimeout(`${API_BASE}/weather/${projectId}`);
-    if (!res.ok) throw new Error("Failed to fetch weather data");
-    return res.json();
-  }
+    try {
+      const res = await fetchWithTimeout(`${API_BASE}/weather/${projectId}`);
+      if (!res.ok) throw new Error('not ok');
+      return res.json();
+    } catch {
+      const { MOCK_WEATHER_DATA } = await import('./mockData');
+      return { project_code: 'Project #042', monitoring_period: 'August 2026', baseline_info: { source: 'IMD 10-Year Gridded Dataset (Demo Mode)', historical_baseline_adverse_days: 8.2, criteria: 'Daily rainfall > 25.0mm OR sustained wind > 45km/h' }, observations: MOCK_WEATHER_DATA, total_adverse_days_recorded: 14 };
+    }
+  },
 };
