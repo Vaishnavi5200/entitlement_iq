@@ -180,7 +180,7 @@ export const App: React.FC = () => {
         </main>
       </div>
 
-      {/* Interactive Pitch Deck & PS #13 Solution Walkthrough Modal */}
+      {/* Interactive Platform Methodology Guide Modal */}
       <PitchDeckWalkthroughModal
         isOpen={isPitchGuideOpen}
         onClose={() => setIsPitchGuideOpen(false)}

@@ -72,7 +72,7 @@ export const ProjectDetailView: React.FC<ProjectDetailViewProps> = ({
   const [showClaimNoticeModal, setShowClaimNoticeModal] = useState<boolean>(false);
   const [showRecalcDrawer, setShowRecalcDrawer] = useState<boolean>(false);
 
-  // Review Form state (Slide 10 Governance)
+  // Review Form state (PM Governance)
   const [reviewDecision, setReviewDecision] = useState<'Approve' | 'Edit' | 'Reject'>('Approve');
   const [reviewEligibleDays, setReviewEligibleDays] = useState<number>(6);
   const [reviewFinancialImpact, setReviewFinancialImpact] = useState<number>(470000);
@@ -277,7 +277,7 @@ export const ProjectDetailView: React.FC<ProjectDetailViewProps> = ({
                 className="px-4 py-2 bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs rounded-xl transition-all shadow-md flex items-center gap-1.5 hover:scale-[1.02]"
               >
                 <UserCheck className="w-4 h-4" />
-                PM Review Workspace (Slide 10)
+                PM Review & Approval Gate
               </button>
             ) : (
               <button
@@ -311,8 +311,8 @@ export const ProjectDetailView: React.FC<ProjectDetailViewProps> = ({
         {/* Workspace Navigation Sub-Tabs */}
         <div className="flex items-center gap-2 border-t border-slate-100 mt-4 pt-3 overflow-x-auto text-xs">
           {[
-            { id: 'workbench', label: '1. Entitlement Workbench (Slide 05)', icon: FileCheck2 },
-            { id: 'pipeline', label: '2. Multi-Agent Pipeline (Slide 07)', icon: Layers },
+            { id: 'workbench', label: '1. Entitlement Workbench', icon: FileCheck2 },
+            { id: 'pipeline', label: '2. Multi-Agent Pipeline', icon: Layers },
             { id: 'contract', label: '3. Contract Clause 8.4(b)', icon: FileText },
             { id: 'evidence', label: '4. Evidence Matrix (8/10)', icon: ShieldCheck },
           ].map((tab) => {
@@ -337,20 +337,20 @@ export const ProjectDetailView: React.FC<ProjectDetailViewProps> = ({
       </div>
 
       {/* ========================================================================= */}
-      {/* TAB 1: WORKBENCH (SLIDE 05 CONTRACT RULE IN ACTION) */}
+      {/* TAB 1: WORKBENCH (CONTRACT RULE EVALUATION) */}
       {/* ========================================================================= */}
       {activeSubTab === 'workbench' && (
         <div className="space-y-6">
-          {/* SLIDE 05 INFOGRAPHIC CARD: HOW THE WEATHER ENGINE REASONS */}
+          {/* INFOGRAPHIC CARD: HOW THE WEATHER ENGINE REASONS */}
           <div className="panel-card p-5 border-amber-300 bg-amber-50/20 shadow-sm space-y-4">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-amber-200/80 pb-3">
               <div>
                 <div className="flex items-center gap-2">
                   <span className="text-[10px] font-extrabold uppercase tracking-wider px-2 py-0.5 bg-amber-500 text-slate-950 rounded font-mono">
-                    CONTRACT RULE IN ACTION · SLIDE 05
+                    CONTRACT CLAUSE EVALUATION
                   </span>
                   <span className="text-xs font-bold text-slate-900">
-                    PROJECT #042 · CONTRACT CLAUSE 8.4(b) — WEATHER DELAY
+                    PROJECT #042 · CLAUSE 8.4(b) — WEATHER DELAY
                   </span>
                 </div>
                 <p className="text-xs text-slate-700 italic mt-1">
@@ -377,7 +377,7 @@ export const ProjectDetailView: React.FC<ProjectDetailViewProps> = ({
               </div>
             </div>
 
-            {/* Slide 5 Equation Visual Stack */}
+            {/* Equation Visual Stack */}
             <div className="grid grid-cols-1 md:grid-cols-5 gap-3 text-center">
               {/* 1. Baseline */}
               <button
@@ -446,7 +446,7 @@ export const ProjectDetailView: React.FC<ProjectDetailViewProps> = ({
               </div>
             </div>
 
-            {/* Slide 5 Entitlement Highlights Row */}
+            {/* Entitlement Highlights Row */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-3 pt-1">
               {/* Potential Entitlement Summary */}
               <button
@@ -673,7 +673,7 @@ export const ProjectDetailView: React.FC<ProjectDetailViewProps> = ({
       )}
 
       {/* ========================================================================= */}
-      {/* TAB 2: MULTI-AGENT PIPELINE (SLIDE 06 & 07) */}
+      {/* TAB 2: MULTI-AGENT PIPELINE */}
       {/* ========================================================================= */}
       {activeSubTab === 'pipeline' && (
         <MultiAgentVisualizer onOpenReview={() => setShowReviewModal(true)} />
@@ -795,7 +795,7 @@ export const ProjectDetailView: React.FC<ProjectDetailViewProps> = ({
       )}
 
       {/* ========================================================================= */}
-      {/* MODAL 1: PM REVIEW & GOVERNANCE WORKSPACE (SLIDE 10) */}
+      {/* MODAL 1: PM REVIEW & GOVERNANCE WORKSPACE */}
       {/* ========================================================================= */}
       {showReviewModal && (
         <div className="fixed inset-0 bg-slate-950/70 z-50 flex items-center justify-center p-4 backdrop-blur-xs">
@@ -805,10 +805,10 @@ export const ProjectDetailView: React.FC<ProjectDetailViewProps> = ({
                 <UserCheck className="w-5 h-5 text-amber-600" />
                 <div>
                   <h3 className="text-base font-bold text-slate-900">
-                    PM Human Review Gate (Slide 10 Governance)
+                    Project Manager Review & Approval Gate
                   </h3>
                   <p className="text-xs text-slate-500">
-                    &ldquo;AI Proposes. A Human Approves. ALWAYS.&rdquo;
+                    Review calculated delay exposure, verify contemporary evidence, and authorize formal claim dispatch.
                   </p>
                 </div>
               </div>

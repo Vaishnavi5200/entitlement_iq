@@ -36,22 +36,22 @@ export const PitchDeckWalkthroughModal: React.FC<PitchDeckWalkthroughModalProps>
 
   const slides = [
     {
-      id: 'slide-1',
-      title: 'EntitlementIQ — Construction Claims Sentinel',
-      subtitle: 'PS #13 · Change Order Claims Desk — AI For Business',
+      id: 'section-1',
+      title: 'EntitlementIQ — Construction Claims Intelligence',
+      subtitle: 'Automated contract delay entitlement detection and notice preservation',
       tag: 'Overview & Mission',
       content: (
         <div className="space-y-4">
           <div className="p-4 rounded-xl bg-slate-900 text-white border border-slate-800 flex items-center justify-between gap-4">
             <div>
               <div className="text-xs font-mono text-amber-400 font-bold uppercase tracking-wider">
-                byteBuilt 1.0 Hackathon · Team Submission
+                Enterprise Claims Intelligence
               </div>
               <h3 className="text-lg font-extrabold mt-1">
                 &ldquo;Detect the delay. Prove the entitlement. Beat the deadline.&rdquo;
               </h3>
               <p className="text-xs text-slate-300 mt-1">
-                Detecting recoverable construction claims before the contractual notice deadline closes.
+                Detecting recoverable construction claims before statutory contractual notice deadlines expire.
               </p>
             </div>
             <div className="hidden sm:block">
@@ -61,15 +61,15 @@ export const PitchDeckWalkthroughModal: React.FC<PitchDeckWalkthroughModalProps>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
             <div className="p-3.5 rounded-lg bg-amber-50/50 border border-amber-200">
-              <span className="font-bold text-amber-900 block mb-1">Focused MVP Wedge:</span>
+              <span className="font-bold text-amber-900 block mb-1">Contract-Encoded Rules:</span>
               <p className="text-slate-700">
-                <strong>Weather Entitlement Engine</strong>. Weather is contract-encoded with clear measurable thresholds (e.g. FIDIC 8.4b), meaning entitlement is computed, not guessed.
+                <strong>Weather Entitlement Engine</strong>. Weather is contract-encoded with clear measurable thresholds (e.g. FIDIC 8.4b), meaning entitlement is computed deterministically, not guessed.
               </p>
             </div>
             <div className="p-3.5 rounded-lg bg-slate-50 border border-slate-200">
-              <span className="font-bold text-slate-900 block mb-1">Core 6-Step Loop:</span>
+              <span className="font-bold text-slate-900 block mb-1">Core Claims Workflow:</span>
               <p className="font-mono text-amber-800 font-bold">
-                Event → Entitlement → Evidence → Impact → Deadline → Action
+                Event → Entitlement → Evidence → Impact → Deadline → PM Approval
               </p>
             </div>
           </div>
@@ -77,14 +77,14 @@ export const PitchDeckWalkthroughModal: React.FC<PitchDeckWalkthroughModalProps>
       )
     },
     {
-      id: 'slide-2',
-      title: 'Problem: Change Orders Drowning in Fragmented Data',
-      subtitle: 'The bottleneck isn&apos;t drafting claims — it&apos;s detecting them in time',
-      tag: 'Problem Statement PS #13',
+      id: 'section-2',
+      title: 'The Challenge: Disconnected Records & Strict Notice Clocks',
+      subtitle: 'The bottleneck in construction claims is correlating evidence in time',
+      tag: 'Problem & Industry Context',
       content: (
         <div className="space-y-4 text-xs">
           <p className="text-slate-700 leading-relaxed">
-            Every construction project generates a flood of disconnected records. When a delay happens, evidence is scattered across 6 separate silos:
+            Every major construction project generates large volumes of disconnected data. When delays occur, evidence is scattered across disparate sources:
           </p>
 
           <div className="grid grid-cols-2 sm:grid-cols-6 gap-2 text-center">
@@ -97,9 +97,9 @@ export const PitchDeckWalkthroughModal: React.FC<PitchDeckWalkthroughModalProps>
 
           <div className="p-3.5 rounded-xl bg-rose-50 border border-rose-200 text-rose-950 flex items-center justify-between">
             <div>
-              <div className="font-bold">The Contractual Clock Does Not Wait</div>
+              <div className="font-bold">The Statutory Clock Does Not Wait</div>
               <p className="text-[11px] text-rose-800 mt-0.5">
-                FIDIC Sub-Clause 20.1 gives a strict 28-day notice window. Miss it, and the contractor forfeits 100% of delay compensation.
+                FIDIC Sub-Clause 20.1 mandates a strict 28-day notice window. Missing this deadline can forfeit rights to prolongation cost recovery.
               </p>
             </div>
             <ClockAlert className="w-8 h-8 text-rose-600 shrink-0 ml-3" />
@@ -108,10 +108,10 @@ export const PitchDeckWalkthroughModal: React.FC<PitchDeckWalkthroughModalProps>
       )
     },
     {
-      id: 'slide-3',
-      title: 'Where Did This Number Come From? (Slide 05)',
-      subtitle: 'Every ₹ and day count has an indisputable mathematical explanation',
-      tag: 'Deterministic Math in Action',
+      id: 'section-3',
+      title: 'Deterministic Calculation & Mathematical Proof',
+      subtitle: 'Every rupee, day count, and threshold has a step-by-step arithmetic derivation',
+      tag: 'Calculation Architecture',
       content: (
         <div className="space-y-3.5 text-xs">
           <div className="p-3 rounded-lg bg-slate-900 text-slate-100 font-mono text-[11px]">
@@ -122,7 +122,7 @@ export const PitchDeckWalkthroughModal: React.FC<PitchDeckWalkthroughModalProps>
             <div className="p-3 rounded-lg bg-slate-50 border border-slate-200 space-y-1">
               <span className="font-bold text-slate-900 block">Why 6.0 Eligible Days?</span>
               <p className="text-slate-700 font-mono text-[11px]">
-                14.0 Actual Adverse Days - 8.0 Scheduled Baseline Allowance = <strong>6.0 Critical Path Days</strong> (Activity CP-1042 Basement Concreting).
+                14.0 Actual Adverse Days - 8.0 Scheduled Baseline Allowance = <strong>6.0 Critical Path Days</strong> (Substructure Concreting CP-1042).
               </p>
             </div>
             <div className="p-3 rounded-lg bg-amber-50 border border-amber-200 space-y-1">
@@ -130,74 +130,74 @@ export const PitchDeckWalkthroughModal: React.FC<PitchDeckWalkthroughModalProps>
               <p className="text-slate-700 font-mono text-[11px]">
                 Overhead (₹50k) + Plant (₹20k) + Labor (₹8.3k) = ₹78,333.33/day.
                 <br />
-                <strong>6 days × ₹78,333.33/day = ₹4,69,999.98 (₹4.7L)</strong>.
+                <strong>6 days × ₹78,333.33/day = ₹4,69,999.98 (₹4.70L)</strong>.
               </p>
             </div>
           </div>
 
           <div className="p-2.5 bg-emerald-50 border border-emerald-200 rounded text-emerald-950 font-semibold text-[11px] flex items-center gap-1.5">
             <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
-            <span>Golden Rule: Pure Python math replaces LLM hallucinations for all numbers.</span>
+            <span>Core Principle: Pure deterministic Python arithmetic handles all numerical evaluations.</span>
           </div>
         </div>
       )
     },
     {
-      id: 'slide-4',
-      title: 'Defensibility & Non-Overclaiming (Slide 10 & 12)',
-      subtitle: 'We do NOT guarantee claim recovery — we prevent statutory forfeiture',
-      tag: 'Legal Defensibility & Ethics',
+      id: 'section-4',
+      title: 'Legal Defensibility & Human Governance',
+      subtitle: 'Surfacing potential recoverable exposure while preserving human authority',
+      tag: 'Governance & Compliance',
       content: (
         <div className="space-y-3 text-xs">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            <div className="p-3 rounded-lg bg-rose-50 border border-rose-200 space-y-1.5">
-              <span className="font-bold text-rose-950 uppercase tracking-wider text-[10px] block">
-                ❌ What We DO NOT Claim
+            <div className="p-3 rounded-lg bg-slate-50 border border-slate-200 space-y-1.5">
+              <span className="font-bold text-slate-900 uppercase tracking-wider text-[10px] block">
+                System Boundary & Constraints
               </span>
-              <ul className="list-disc list-inside space-y-0.5 text-rose-900 text-[11px]">
-                <li>&ldquo;Claim is legally guaranteed&rdquo;</li>
-                <li>&ldquo;Zero hallucinations anywhere in the universe&rdquo;</li>
-                <li>&ldquo;AI makes the final legal / commercial decision&rdquo;</li>
+              <ul className="list-disc list-inside space-y-0.5 text-slate-700 text-[11px]">
+                <li>Identifies potential recoverable exposure</li>
+                <li>Never makes binding legal determinations</li>
+                <li>Generates draft notices for PM authorization</li>
               </ul>
             </div>
             <div className="p-3 rounded-lg bg-emerald-50 border border-emerald-200 space-y-1.5">
               <span className="font-bold text-emerald-950 uppercase tracking-wider text-[10px] block">
-                ✅ What We DO Provide
+                Enterprise Value Delivered
               </span>
               <ul className="list-disc list-inside space-y-0.5 text-emerald-900 text-[11px]">
-                <li>Potential recoverable exposure identified</li>
-                <li>Deterministic daily threshold calculations</li>
-                <li>Human PM approval gate before notice dispatch</li>
-                <li>Protection against the 28-day notice clock forfeiture</li>
+                <li>Immediate notification before 28-day notice forfeiture</li>
+                <li>Deterministic threshold & cost audit trail</li>
+                <li>Mandatory PM review gate before notice issue</li>
+                <li>Automated compilation of contemporary evidence</li>
               </ul>
             </div>
           </div>
 
           <div className="p-2.5 rounded-lg bg-slate-900 text-white font-mono text-[11px] text-center">
-            &ldquo;AI Proposes. A Human Approves. Engineer Determines. ALWAYS.&rdquo;
+            &ldquo;AI Proposes. A Human Approves. The Engineer Determines. Always.&rdquo;
           </div>
         </div>
       )
     },
     {
-      id: 'slide-5',
-      title: 'System Architecture: Multi-Agent Division of Labor (Slide 07)',
-      subtitle: 'AI for reasoning, deterministic code for math',
-      tag: 'Multi-Agent Pipeline',
+      id: 'section-5',
+      title: 'System Architecture: Multi-Agent Processing Pipeline',
+      subtitle: 'Clear division of labor between reasoning, data ingestion, and math',
+      tag: 'System Architecture',
       content: (
         <div className="space-y-3 text-xs">
           <p className="text-slate-700">
-            8 distinct agents work together with strict separation of reasoning and mathematics:
+            8 distinct modular components work in unison with strict separation of concerns:
           </p>
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-[11px]">
-            <div className="p-2 bg-slate-50 border border-slate-200 rounded">1. Contract Agent (AI)</div>
-            <div className="p-2 bg-slate-50 border border-slate-200 rounded">2. Weather Agent (Data)</div>
+            <div className="p-2 bg-slate-50 border border-slate-200 rounded font-semibold">1. Contract Parser (AI)</div>
+            <div className="p-2 bg-slate-50 border border-slate-200 rounded font-semibold">2. Weather Pipeline (Data)</div>
             <div className="p-2 bg-amber-50 border border-amber-200 rounded font-bold text-amber-900">3. Entitlement Engine (Math)</div>
-            <div className="p-2 bg-slate-50 border border-slate-200 rounded">4. Evidence Agent (P6/AWS)</div>
-            <div className="p-2 bg-amber-50 border border-amber-200 rounded font-bold text-amber-900">5. Impact Calculator (Math)</div>
-            <div className="p-2 bg-rose-50 border border-rose-200 rounded font-bold text-rose-900">6. Deadline Sentinel (28d)</div>
-            <div className="p-2 bg-slate-50 border border-slate-200 rounded">7. Validator (Audit)</div>
-            <div className="p-2 bg-emerald-50 border border-emerald-200 rounded font-bold text-emerald-900">8. Human Gate (PM)</div>
+            <div className="p-2 bg-slate-50 border border-slate-200 rounded font-semibold">4. Evidence Correlator</div>
+            <div className="p-2 bg-amber-50 border border-amber-200 rounded font-bold text-amber-900">5. Impact Calculator (Cost)</div>
+            <div className="p-2 bg-rose-50 border border-rose-200 rounded font-bold text-rose-900">6. Notice Clock Monitor</div>
+            <div className="p-2 bg-slate-50 border border-slate-200 rounded font-semibold">7. Audit Ledger</div>
+            <div className="p-2 bg-emerald-50 border border-emerald-200 rounded font-bold text-emerald-900">8. PM Approval Gate</div>
           </div>
         </div>
       )
@@ -215,9 +215,9 @@ export const PitchDeckWalkthroughModal: React.FC<PitchDeckWalkthroughModalProps>
             <Logo variant="icon" size="sm" />
             <div>
               <div className="flex items-center gap-2">
-                <span className="text-xs font-bold text-slate-900">Pitch Deck & Solution Guide</span>
+                <span className="text-xs font-bold text-slate-900">Platform Methodology Guide</span>
                 <span className="text-[10px] font-mono px-2 py-0.5 bg-amber-100 text-amber-900 rounded font-bold">
-                  Slide {currentSlide + 1} of {slides.length}
+                  Section {currentSlide + 1} of {slides.length}
                 </span>
               </div>
               <p className="text-[11px] text-slate-500">{current.tag}</p>
@@ -278,7 +278,7 @@ export const PitchDeckWalkthroughModal: React.FC<PitchDeckWalkthroughModalProps>
                 }}
                 className="px-3.5 py-1.5 bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold rounded-lg flex items-center gap-1.5 transition-colors shadow-xs"
               >
-                Open Live Project #042 Demo <ArrowRight className="w-4 h-4" />
+                Explore Project #042 Workspace <ArrowRight className="w-4 h-4" />
               </button>
             )}
           </div>

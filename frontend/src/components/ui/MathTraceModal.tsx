@@ -231,7 +231,7 @@ export const MathTraceModal: React.FC<MathTraceModalProps> = ({
       unit: '₹19.7 Lakh Across 3 Eligible Packages',
       concept: 'Sum of Potential Prolongation Exposures across All Active Threshold Triggers',
       formula: 'Portfolio Total = Project #042 (₹4.70L) + Project #017 (₹8.55L) + Project #031 (₹6.50L) + Project #056 (₹0.00L)',
-      contractSource: 'Continuous Multi-Contract Surveillance Ledger (Slide 08)',
+      contractSource: 'Continuous Multi-Contract Surveillance Ledger',
       steps: [
         {
           stepNum: '01',

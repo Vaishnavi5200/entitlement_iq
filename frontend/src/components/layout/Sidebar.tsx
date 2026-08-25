@@ -33,14 +33,14 @@ export const Sidebar: React.FC<SidebarProps> = ({
 }) => {
   const navItems = [
     { id: 'dashboard', label: 'Executive Overview', icon: LayoutDashboard, badge: null },
-    { id: 'project-detail', label: 'Project #042 Workspace', icon: FolderKanban, badge: 'Target', isProject: true },
-    { id: 'projects-list', label: 'Portfolio Surveillance', icon: HardHat, badge: '4 / 500' },
-    { id: 'entitlements', label: 'Weather Entitlements', icon: FileCheck2, badge: '3 Detected' },
+    { id: 'project-detail', label: 'Project #042 Workspace', icon: FolderKanban, badge: 'Active', isProject: true },
+    { id: 'projects-list', label: 'Portfolio Overview', icon: HardHat, badge: '4 Projects' },
+    { id: 'entitlements', label: 'Weather Entitlements', icon: FileCheck2, badge: '3 Identified' },
     { id: 'evidence', label: 'Evidence Matrix', icon: Database, badge: '8/10' },
     { id: 'deadlines', label: 'Notice Deadlines', icon: ClockAlert, badge: '2 Urgent' },
     { id: 'claims', label: 'Claims & Notices', icon: FileText, badge: null },
-    { id: 'contract-upload', label: 'Contract Rule AI', icon: FileCode, badge: 'Claude' },
-    { id: 'audit-log', label: 'Immutable Audit Trail', icon: History, badge: null },
+    { id: 'contract-upload', label: 'Contract Clause Parser', icon: FileCode, badge: 'AI Assisted' },
+    { id: 'audit-log', label: 'Audit Ledger', icon: History, badge: null },
   ];
 
   return (
@@ -50,14 +50,14 @@ export const Sidebar: React.FC<SidebarProps> = ({
         <Logo variant="horizontal" size="md" showTagline={true} />
       </div>
 
-      {/* Core Loop Purpose Pill */}
+      {/* Core Workflow Purpose Pill */}
       <div className="mx-3 mt-3 p-3 rounded-xl bg-slate-900/90 border border-slate-800 text-[11px] text-slate-300">
         <div className="font-bold text-slate-200 flex items-center gap-1.5 mb-1">
           <ShieldCheck className="w-3.5 h-3.5 text-amber-400" />
-          <span>Core 6-Step Loop</span>
+          <span>Claims Decision Workflow</span>
         </div>
-        <div className="text-[10px] text-amber-400/90 font-mono tracking-tight font-semibold">
-          Event → Entitlement → Evidence → Impact → Deadline → Action
+        <div className="text-[10px] text-amber-400 font-mono tracking-tight font-semibold">
+          Event → Entitlement → Evidence → Impact → Deadline → PM Approval
         </div>
       </div>
 
@@ -93,7 +93,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
                   className={`text-[9.5px] font-mono font-bold px-1.5 py-0.5 rounded ${
                     isActive
                       ? 'bg-slate-950 text-amber-400'
-                      : item.badge === 'Target'
+                      : item.badge === 'Active'
                       ? 'bg-amber-500/20 text-amber-300 border border-amber-500/30'
                       : item.badge.includes('Urgent')
                       ? 'bg-rose-500/20 text-rose-300 border border-rose-500/30'
@@ -108,20 +108,20 @@ export const Sidebar: React.FC<SidebarProps> = ({
         })}
       </nav>
 
-      {/* Pitch Deck Guide Quick Trigger */}
+      {/* Methodology Guide Trigger */}
       <div className="px-3 pb-2">
         <button
           onClick={onOpenPitchGuide}
-          className="w-full p-2.5 rounded-xl bg-slate-900 hover:bg-slate-800/90 border border-amber-500/30 text-xs font-semibold text-amber-300 flex items-center justify-between transition-all group shadow-xs"
+          className="w-full p-2.5 rounded-xl bg-slate-900 hover:bg-slate-800/90 border border-slate-800 hover:border-amber-500/30 text-xs font-semibold text-slate-200 flex items-center justify-between transition-all group shadow-xs"
         >
           <div className="flex items-center gap-2">
             <BookOpen className="w-4 h-4 text-amber-400 group-hover:scale-110 transition-transform" />
             <div className="text-left">
-              <div className="text-[11px] font-bold text-slate-100">PS #13 Pitch Deck Guide</div>
-              <div className="text-[9.5px] text-slate-400 font-normal">Architecture & Methodology</div>
+              <div className="text-[11px] font-bold text-slate-100">Platform Methodology</div>
+              <div className="text-[9.5px] text-slate-400 font-normal">Architecture & Calculations</div>
             </div>
           </div>
-          <ChevronRight className="w-3.5 h-3.5 text-amber-400" />
+          <ChevronRight className="w-3.5 h-3.5 text-slate-400 group-hover:text-amber-400 transition-colors" />
         </button>
       </div>
 

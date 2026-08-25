@@ -71,58 +71,46 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
     { num: '02', title: 'Entitlement', desc: 'Threshold 8.2 + 4.0 = 12.2d', topic: 'weather_threshold_12_2' as MathTopic },
     { num: '03', title: 'Evidence', desc: 'AWS + DPR #218 (8/10)', action: 'project' },
     { num: '04', title: 'Impact', desc: '6d EoT · ₹4.7L Exposure', topic: 'financial_4_7_lakh' as MathTopic },
-    { num: '05', title: 'Deadline', desc: '5 Days in Notice Window', topic: 'deadline_5_days' as MathTopic, urgent: true },
-    { num: '06', title: 'Action', desc: 'PM Review → Generate Claim', action: 'project', cta: true },
+    { num: '05', title: 'Deadline', desc: '5 Days Remaining', topic: 'deadline_5_days' as MathTopic, urgent: true },
+    { num: '06', title: 'PM Approval', desc: 'Human Sign-Off & Notice', action: 'project', cta: true },
   ];
 
   return (
     <div className="p-6 max-w-7xl mx-auto space-y-6">
-      {/* Executive Hero Banner */}
-      <div className="bg-[#0B1120] rounded-2xl p-6 text-white border border-slate-800 shadow-lg relative overflow-hidden flex flex-col md:flex-row md:items-center justify-between gap-6">
-        <div className="space-y-1.5 z-10">
+      {/* Executive SaaS Header */}
+      <div className="bg-white rounded-xl p-5 border border-slate-200 shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div className="space-y-1">
           <div className="flex items-center gap-2">
-            <span className="px-2.5 py-0.5 text-[10.5px] font-extrabold uppercase tracking-wider bg-amber-500 text-slate-950 rounded-md">
-              PS #13 · Change Order Claims Desk
+            <span className="text-[10.5px] font-bold uppercase tracking-wider text-amber-800 bg-amber-50 px-2 py-0.5 rounded border border-amber-200">
+              Portfolio Surveillance
             </span>
-            <span className="text-xs text-slate-400 font-mono">August/September 2026 Monitoring Cycle</span>
+            <span className="text-xs text-slate-500 font-mono">August / September 2026 Monitoring Cycle</span>
           </div>
-          <h1 className="text-2xl font-extrabold text-white tracking-tight">
-            &ldquo;Detect the delay. Prove the entitlement. Beat the deadline.&rdquo;
+          <h1 className="text-xl font-bold text-slate-900 tracking-tight">
+            Claims Intelligence Dashboard
           </h1>
-          <p className="text-xs text-slate-300 max-w-2xl leading-relaxed">
-            Real-time contract weather threshold audits across active EPC packages. <strong>{formatCurrency(metrics.total_recoverable_value)}</strong> in potential recoverable prolongation exposure identified to preserve rights before the 28-day notice clock closes.
+          <p className="text-xs text-slate-600 max-w-2xl leading-relaxed">
+            Continuous contract threshold surveillance across <strong>{metrics.active_projects_count} active EPC packages</strong>. <strong>{formatCurrency(metrics.total_recoverable_value)}</strong> in potential recoverable prolongation exposure identified to safeguard notice compliance.
           </p>
         </div>
 
-        <div className="flex flex-wrap items-center gap-3 shrink-0 z-10">
-          {onOpenPitchGuide && (
-            <button
-              onClick={onOpenPitchGuide}
-              className="px-3.5 py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold text-xs rounded-xl border border-slate-700 transition-all flex items-center gap-1.5"
-            >
-              <Info className="w-4 h-4 text-amber-400" />
-              Solution Methodology
-            </button>
-          )}
+        <div className="flex items-center gap-2.5 shrink-0">
           <button
             onClick={() => onSelectClaim(1, 1)}
-            className="px-4 py-2 bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs rounded-xl transition-all shadow-md flex items-center gap-1.5 hover:scale-[1.02]"
+            className="px-4 py-2 bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs rounded-lg transition-all shadow-xs flex items-center gap-1.5 hover:scale-[1.01]"
           >
-            Review Project #042 Delay
+            <span>Review Project #042 Dossier</span>
             <ArrowUpRight className="w-4 h-4" />
           </button>
         </div>
-
-        {/* Ambient subtle background decorative glow */}
-        <div className="absolute -right-10 -bottom-10 w-64 h-64 bg-amber-500/10 rounded-full blur-3xl pointer-events-none" />
       </div>
 
       {/* Non-Overclaiming Legal Disclaimer Guardrail */}
-      <div className="p-3 rounded-xl bg-slate-100 border border-slate-200 text-xs text-slate-700 flex items-center justify-between gap-3">
+      <div className="p-3 rounded-xl bg-slate-50 border border-slate-200 text-xs text-slate-700 flex items-center justify-between gap-3">
         <div className="flex items-center gap-2">
           <ShieldCheck className="w-4 h-4 text-amber-600 shrink-0" />
           <span>
-            <strong>Legal Defensibility Notice:</strong> EntitlementIQ identifies potential contract entitlements to avoid statutory notice forfeiture under FIDIC Sub-Clause 20.1. Formal claim determination and recovery remain subject to Project Manager review and Engineer determination.
+            <strong>Legal Governance Principle:</strong> EntitlementIQ identifies potential recoverable exposure under contract thresholds (e.g. FIDIC Sub-Clause 8.4/20.1). AI proposes; formal notice determination and approval remain strictly subject to Project Manager review and Engineer sign-off.
           </span>
         </div>
         <button
@@ -134,24 +122,24 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
         </button>
       </div>
 
-      {/* Interactive Core Product Loop (Slide 4 from Pitch Deck) */}
+      {/* Interactive Core Workflow */}
       <div className="panel-card p-4 bg-white">
         <div className="flex items-center justify-between pb-2 border-b border-slate-100 mb-3">
           <div className="flex items-center gap-2">
             <span className="text-xs font-bold uppercase tracking-wider text-slate-900">
-              The Core Product Loop
+              Claims Decision Workflow
             </span>
             <span className="text-[11px] text-slate-500 font-mono hidden sm:inline">
-              (Event → Entitlement → Evidence → Impact → Deadline → Action)
+              (Event → Entitlement → Evidence → Impact → Deadline → PM Approval)
             </span>
           </div>
-          <span className="text-[11px] font-mono font-bold text-amber-700 bg-amber-50 px-2 py-0.5 rounded border border-amber-200">
-            Slide 04 Standard Workflow
+          <span className="text-[11px] font-mono font-semibold text-slate-600 bg-slate-100 px-2 py-0.5 rounded border border-slate-200">
+            End-to-End Traceability
           </span>
         </div>
 
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2.5">
-          {steps.map((s, idx) => (
+          {steps.map((s) => (
             <button
               key={s.num}
               onClick={() => {
@@ -190,7 +178,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
         </div>
       </div>
 
-      {/* Top 5 Summary Metrics Cards with Math Audit Triggers */}
+      {/* Summary Metrics Cards */}
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3.5">
         {/* Active Packages */}
         <div className="panel-card p-4">
@@ -202,7 +190,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
             {metrics.active_projects_count}
           </div>
           <div className="mt-1 text-[11px] text-slate-500 font-medium">
-            100% contracts under surveillance
+            Contracts under surveillance
           </div>
         </div>
 
@@ -216,7 +204,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
             <Calculator className="w-3.5 h-3.5 text-amber-600 group-hover:scale-110 transition-transform" />
           </div>
           <div className="mt-2 text-2xl font-extrabold font-mono text-amber-900">
-            {metrics.potential_entitlements_count} Detected
+            {metrics.potential_entitlements_count} Identified
           </div>
           <div className="mt-1 text-[11px] text-amber-700 font-medium flex items-center justify-between">
             <span>Weather thresholds exceeded</span>
@@ -227,14 +215,14 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
         {/* Claims At Risk */}
         <div className="panel-card p-4 border-rose-200 bg-rose-50/20">
           <div className="flex items-center justify-between text-rose-800 text-xs font-bold uppercase tracking-wider">
-            <span>Claims At Risk</span>
+            <span>Notice Urgency</span>
             <AlertTriangle className="w-4 h-4 text-rose-600" />
           </div>
           <div className="mt-2 text-2xl font-extrabold font-mono text-rose-900">
-            {metrics.claims_at_risk_count}
+            {metrics.claims_at_risk_count} Urgent
           </div>
           <div className="mt-1 text-[11px] text-rose-700 font-medium">
-            High / Critical deadline urgency
+            Notice window closing soon
           </div>
         </div>
 
@@ -251,7 +239,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
             {metrics.deadlines_within_7_days_count}
           </div>
           <div className="mt-1 text-[11px] text-orange-700 font-medium flex items-center justify-between">
-            <span>28-day window closing</span>
+            <span>Statutory 28d clock</span>
             <span className="text-[10px] font-mono underline font-bold">Trace →</span>
           </div>
         </button>
@@ -259,7 +247,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
         {/* Potential Recoverable Exposure Identified */}
         <button
           onClick={() => setActiveMathTopic('portfolio_19_7_lakh')}
-          className="panel-card p-4 col-span-2 md:col-span-1 border-slate-800 bg-[#0B1120] text-white text-left hover:border-amber-400 transition-all group shadow-md"
+          className="panel-card p-4 col-span-2 md:col-span-1 border-slate-800 bg-[#0B1120] text-white text-left hover:border-amber-400 transition-all group shadow-sm"
         >
           <div className="flex items-center justify-between text-slate-300 text-xs font-bold uppercase tracking-wider">
             <span>Potential Exposure</span>
@@ -269,13 +257,13 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
             {formatCurrency(metrics.total_recoverable_value)}
           </div>
           <div className="mt-1 text-[11px] text-slate-300 flex items-center justify-between">
-            <span>Across 3 eligible packages</span>
-            <span className="text-[10px] text-amber-400 font-mono underline">Math Proof →</span>
+            <span>Across 3 active packages</span>
+            <span className="text-[10px] text-amber-400 font-mono underline">Audit →</span>
           </div>
         </button>
       </div>
 
-      {/* Main Grid: Priority Claims (Left) + Slide 5 Reasoner & Pipeline (Right) */}
+      {/* Main Grid: Priority Claims (Left) + Entitlement Rule & Deadlines (Right) */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
         {/* Priority Claims Table (8 cols) */}
         <div className="lg:col-span-8 space-y-6">
@@ -283,14 +271,14 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
             <div className="p-4 border-b border-slate-200 bg-slate-50/80 flex items-center justify-between">
               <div>
                 <h2 className="text-xs font-bold text-slate-900 uppercase tracking-wider">
-                  A. Potential Entitlements & Priority Claims
+                  Active Contract Entitlements & Notice Deadlines
                 </h2>
                 <p className="text-xs text-slate-500 mt-0.5">
-                  Ranked by statutory notice deadline under FIDIC Sub-Clause 20.1.
+                  Ranked by statutory notice deadline under standard FIDIC Sub-Clause 20.1 provisions.
                 </p>
               </div>
-              <span className="text-xs font-mono text-slate-600 bg-white px-2.5 py-1 rounded-md border border-slate-200 font-bold">
-                {metrics.priority_claims.length} Active Notice Tracks
+              <span className="text-xs font-mono text-slate-600 bg-white px-2.5 py-1 rounded-md border border-slate-200 font-semibold">
+                {metrics.priority_claims.length} Active Tracks
               </span>
             </div>
 
@@ -344,7 +332,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                             <button
                               onClick={() => setActiveMathTopic('delay_6_days')}
                               className="hover:text-amber-700 hover:underline flex items-center justify-end gap-1 ml-auto"
-                              title="Click to view 6-day derivation"
+                              title="Click to view eligible day derivation"
                             >
                               <span>{claim.eligible_days}d</span>
                               <Calculator className="w-2.5 h-2.5 text-slate-400" />
@@ -359,7 +347,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                             <button
                               onClick={() => setActiveMathTopic(isTarget ? 'financial_4_7_lakh' : 'portfolio_19_7_lakh')}
                               className="hover:text-amber-700 hover:underline flex items-center justify-end gap-1 ml-auto"
-                              title="Click to view exact multiplication breakdown"
+                              title="Click to view cost calculation breakdown"
                             >
                               <span>{formatCurrency(claim.estimated_impact)}</span>
                               <Calculator className="w-2.5 h-2.5 text-amber-500" />
@@ -404,7 +392,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                             onClick={() => onSelectClaim(claim.project_id, claim.id)}
                             className={`px-3 py-1 text-xs font-bold rounded-lg transition-all ${
                               isTarget
-                                ? 'bg-amber-500 hover:bg-amber-400 text-slate-950 shadow-xs'
+                                ? 'bg-amber-500 hover:bg-amber-400 text-slate-950 shadow-2xs'
                                 : 'bg-slate-900 hover:bg-slate-800 text-white'
                             }`}
                           >
@@ -423,22 +411,22 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
           <div className="p-4 rounded-xl bg-slate-50 border border-slate-200 flex items-start gap-3">
             <Calculator className="w-4 h-4 text-slate-500 shrink-0 mt-0.5" />
             <div className="text-xs text-slate-600 space-y-1">
-              <strong className="text-slate-900">Mathematical Auditability (Zero Hallucinations):</strong>
+              <strong className="text-slate-900">Deterministic Mathematical Auditability:</strong>
               <p className="leading-relaxed">
-                Click on any financial number, day count, or deadline in the table above to inspect the step-by-step arithmetic proof. EntitlementIQ uses pure Python arithmetic formulas tied directly to contractual clauses and station logs.
+                Click on any financial figure, day count, or deadline in the table above to view the step-by-step arithmetic derivation. Calculations are derived deterministically from contractual clauses, baseline weather records, and critical path schedules.
               </p>
             </div>
           </div>
         </div>
 
-        {/* Right Column: Slide 5 Reasoner Card & Deadlines (4 cols) */}
+        {/* Right Column: Entitlement Rule & Deadlines (4 cols) */}
         <div className="lg:col-span-4 space-y-6">
-          {/* Slide 5 Infographic: Contract Rule In Action */}
-          <div className="panel-card p-5 border-amber-300 bg-amber-50/20 space-y-3">
+          {/* Active Contract Entitlement Rule */}
+          <div className="panel-card p-5 border-amber-200 bg-amber-50/20 space-y-3">
             <div className="flex items-center justify-between pb-2 border-b border-amber-200/80">
               <span className="text-xs font-bold text-amber-900 uppercase tracking-wider flex items-center gap-1.5">
                 <Sparkles className="w-3.5 h-3.5 text-amber-600" />
-                Contract Rule in Action (Slide 05)
+                Active Threshold Rule (Clause 8.4b)
               </span>
               <span className="text-[10px] font-mono font-bold bg-amber-500 text-slate-950 px-1.5 py-0.5 rounded">
                 #042
@@ -447,7 +435,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
 
             <div className="p-3 rounded-lg bg-white border border-amber-200 text-xs space-y-2">
               <div className="text-[11px] font-bold text-slate-800">
-                Clause 8.4(b) Weather Delay Calculation:
+                Weather Delay Entitlement Calculation:
               </div>
               <div className="font-mono text-xs space-y-1 text-slate-700 bg-slate-50 p-2.5 rounded border border-slate-200">
                 <div className="flex justify-between">
@@ -484,19 +472,19 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
               </button>
               <button
                 onClick={() => onSelectClaim(1, 1)}
-                className="flex-1 py-1.5 bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs rounded-lg transition-colors flex items-center justify-center gap-1 shadow-xs"
+                className="flex-1 py-1.5 bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs rounded-lg transition-colors flex items-center justify-center gap-1 shadow-2xs"
               >
                 Open Workspace <ChevronRight className="w-3.5 h-3.5 text-amber-400" />
               </button>
             </div>
           </div>
 
-          {/* Section B: Deadline Risk Sentinel */}
+          {/* Section B: Notice Deadline Tracker */}
           <div className="panel-card p-4 space-y-3">
             <div className="flex items-center justify-between pb-2 border-b border-slate-100">
               <h2 className="text-xs font-bold text-slate-900 uppercase tracking-wider flex items-center gap-1.5">
                 <ClockAlert className="w-4 h-4 text-amber-600" />
-                Notice Deadline Sentinel
+                Contract Notice Deadlines
               </h2>
               <span className="text-[11px] text-slate-500 font-mono">28-Day Clock</span>
             </div>
@@ -507,7 +495,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                   Critical (&le; 3 Days)
                 </div>
                 <div className="text-xs font-mono font-bold text-rose-800">
-                  {metrics.deadline_risk_breakdown['Critical']} Claim(s)
+                  {metrics.deadline_risk_breakdown['Critical']} Track(s)
                 </div>
               </div>
 
@@ -516,7 +504,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                   High (&le; 5 Days) — Project #042
                 </div>
                 <div className="text-xs font-mono font-bold text-amber-800">
-                  {metrics.deadline_risk_breakdown['High']} Claim(s)
+                  {metrics.deadline_risk_breakdown['High']} Track(s)
                 </div>
               </div>
 
@@ -525,7 +513,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                   Low / Served (&gt; 10 Days)
                 </div>
                 <div className="text-xs font-mono font-bold text-slate-700">
-                  {metrics.deadline_risk_breakdown['Low']} Claim(s)
+                  {metrics.deadline_risk_breakdown['Low']} Track(s)
                 </div>
               </div>
             </div>
@@ -535,7 +523,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
               className="w-full mt-2 py-2 px-3 bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-lg text-xs font-bold text-slate-700 flex items-center justify-center gap-1.5 transition-colors"
             >
               <Sparkles className="w-3.5 h-3.5 text-amber-500" />
-              Onboard Contract via AI
+              Parse Contract Clause
             </button>
           </div>
         </div>

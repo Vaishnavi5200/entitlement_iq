@@ -42,27 +42,27 @@ export const ProjectsListView: React.FC<ProjectsListViewProps> = ({
 
   return (
     <div className="p-6 max-w-7xl mx-auto space-y-6">
-      {/* Portfolio Header matching Slide 08 */}
-      <div className="bg-[#0B1120] text-white p-6 rounded-2xl border border-slate-800 shadow-md flex flex-col md:flex-row md:items-center justify-between gap-4">
+      {/* Portfolio Header */}
+      <div className="bg-white p-5 rounded-xl border border-slate-200 shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
           <div className="flex items-center gap-2">
-            <span className="px-2.5 py-0.5 text-[10px] font-extrabold uppercase tracking-wider bg-amber-500 text-slate-950 rounded-md">
-              Portfolio Scale · Slide 08
+            <span className="px-2 py-0.5 text-[10.5px] font-bold uppercase tracking-wider bg-amber-50 text-amber-800 border border-amber-200 rounded">
+              Portfolio Surveillance
             </span>
-            <span className="text-xs text-slate-400 font-mono">Continuous Multi-Project Surveillance</span>
+            <span className="text-xs text-slate-500 font-mono">Continuous Multi-Contract Auditing</span>
           </div>
-          <h1 className="text-xl font-extrabold text-white tracking-tight mt-1">
-            The system remembers every project — across hundreds at once
+          <h1 className="text-xl font-bold text-slate-900 tracking-tight mt-1">
+            Enterprise Project & Contract Packages
           </h1>
-          <p className="text-xs text-slate-300 mt-1 max-w-2xl">
-            A claims team doesn&apos;t want: <em>&ldquo;Here&apos;s one claim.&rdquo;</em> They want: <strong>&ldquo;Here are the projects where you may be leaving money on the table.&rdquo;</strong>
+          <p className="text-xs text-slate-600 mt-1 max-w-2xl">
+            Real-time monitoring across all active EPC packages to identify contractual entitlement breaches and prevent statutory notice forfeiture.
           </p>
         </div>
 
         <div className="flex items-center gap-3 shrink-0">
-          <div className="p-3 bg-slate-900 border border-slate-800 rounded-xl text-center min-w-[120px]">
-            <div className="text-2xl font-extrabold font-mono text-amber-400">500+</div>
-            <div className="text-[10px] text-slate-400 uppercase font-semibold">Active Monitored</div>
+          <div className="p-3 bg-slate-50 border border-slate-200 rounded-xl text-center min-w-[120px]">
+            <div className="text-2xl font-extrabold font-mono text-slate-900">{projects.length}</div>
+            <div className="text-[10px] text-slate-500 uppercase font-semibold">Active Packages</div>
           </div>
         </div>
       </div>
@@ -117,8 +117,8 @@ export const ProjectsListView: React.FC<ProjectsListViewProps> = ({
                       {project.code}
                     </span>
                     {isTarget && (
-                      <span className="text-[10px] font-bold uppercase bg-amber-100 text-amber-900 border border-amber-300 px-1.5 py-0.2 rounded">
-                        ⭐ Primary Hackathon Demo
+                      <span className="text-[10px] font-bold uppercase bg-amber-100 text-amber-900 border border-amber-300 px-1.5 py-0.5 rounded">
+                        Featured Package
                       </span>
                     )}
                   </div>

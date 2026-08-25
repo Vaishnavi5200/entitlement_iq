@@ -24,7 +24,7 @@ export const DeadlinesView: React.FC<DeadlinesViewProps> = ({
           <div>
             <div className="flex items-center gap-2 text-xs font-bold text-amber-700 uppercase tracking-wider">
               <ClockAlert className="w-4 h-4 text-amber-600" />
-              Contractual Notice Period Sentinel
+              Contractual Notice Period Monitor
             </div>
             <h1 className="text-xl font-bold text-slate-900 mt-1">
               Notice Deadlines & Forfeiture Risk Monitor

@@ -23,7 +23,7 @@ export const AuditLogView: React.FC = () => {
           <div>
             <div className="flex items-center gap-2 text-xs font-bold text-amber-700 uppercase tracking-wider">
               <History className="w-4 h-4 text-amber-600" />
-              Immutable Audit Sentinel
+              Immutable Audit Ledger
             </div>
             <h1 className="text-xl font-bold text-slate-900 mt-1">
               Contract & Claim Traceability Log

@@ -135,20 +135,20 @@ export const MultiAgentVisualizer: React.FC<MultiAgentVisualizerProps> = ({
 
   return (
     <div className="space-y-4">
-      {/* Principle Banner (Slide 6 & 7) */}
-      <div className="p-4 rounded-xl bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900 border border-slate-700 text-white flex flex-col md:flex-row md:items-center justify-between gap-3">
+      {/* Principle Banner */}
+      <div className="p-4 rounded-xl bg-slate-900 border border-slate-800 text-white flex flex-col md:flex-row md:items-center justify-between gap-3 shadow-xs">
         <div className="space-y-0.5">
           <div className="flex items-center gap-2">
-            <span className="text-[10px] font-extrabold uppercase tracking-wider px-2 py-0.5 rounded bg-amber-500 text-slate-950">
-              System Architecture · Slide 06 & 07
+            <span className="text-[10px] font-extrabold uppercase tracking-wider px-2 py-0.5 rounded bg-amber-500 text-slate-950 font-mono">
+              System Architecture
             </span>
-            <span className="text-xs text-slate-400 font-mono">Multi-Agent Division of Labor</span>
+            <span className="text-xs text-slate-400 font-mono">Multi-Agent Claims Pipeline</span>
           </div>
           <h3 className="text-sm font-bold text-slate-100">
-            &ldquo;AI for reasoning, deterministic code for math.&rdquo;
+            &ldquo;AI for clause interpretation, deterministic computation for mathematics.&rdquo;
           </h3>
           <p className="text-xs text-slate-300">
-            Different tasks need different judgment. Not 5 generic LLM calls pretending to be employees.
+            Strict separation between natural language parsing, empirical data ingestion, mathematical evaluation, and human authorization.
           </p>
         </div>
 

@@ -109,8 +109,8 @@ export const Logo: React.FC<LogoProps> = ({
             <span className="text-amber-400">IQ</span>
           </div>
           {showTagline && (
-            <div className="text-[9.5px] font-bold uppercase tracking-[0.25em] text-slate-400 mt-0.5">
-              CONSTRUCTION CLAIMS SENTINEL
+            <div className="text-[9.5px] font-bold uppercase tracking-[0.2em] text-slate-400 mt-0.5">
+              CONSTRUCTION CLAIMS INTELLIGENCE
             </div>
           )}
         </div>
@@ -122,18 +122,15 @@ export const Logo: React.FC<LogoProps> = ({
   return (
     <div className={`flex items-center gap-2.5 select-none ${className}`}>
       <ShieldIcon />
-      <div className="leading-none">
-        <div className="flex items-center gap-1">
+      <div className="leading-tight">
+        <div className="flex items-center gap-1.5">
           <span className="text-base font-extrabold tracking-tight text-white">
             Entitlement<span className="text-amber-400">IQ</span>
-          </span>
-          <span className="text-[9px] font-extrabold uppercase px-1.5 py-0.5 bg-amber-500/20 text-amber-300 rounded border border-amber-500/30">
-            SENTINEL
           </span>
         </div>
         {showTagline && (
           <div className="text-[8.5px] font-bold uppercase tracking-wider text-slate-400 mt-0.5">
-            CONSTRUCTION CLAIMS SENTINEL
+            Claims Intelligence
           </div>
         )}
       </div>
